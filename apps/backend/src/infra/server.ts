@@ -1,20 +1,18 @@
 import { env } from './env';
 import express from 'express';
 import cors from 'cors';
-import { prisma } from './database/prisma';
+import swaggerUi from 'swagger-ui-express';
+
+import { router } from './routes';
+import { swaggerDocument } from './swagger';
 
 const app = express();
 
 app.use(express.json());
 
-app.get('/healthcheck', async (req, res) => {
-  const check = await prisma.healthCheck.findFirst();
-  res.json({
-    status: 'ok',
-    database: !!check,
-    message: check?.message,
-  });
-});
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.use(router);
 
 app.use(
   cors({
@@ -26,6 +24,7 @@ app.use(
 async function bootstrap() {
   app.listen({ port: env.PORT }, () => {
     console.log(`Server is running on http://localhost:${env.PORT}`);
+    console.log(`📄 Documentation available at http://localhost:${env.PORT}/docs`);
   });
 }
 
