@@ -6,6 +6,7 @@ import { FindCompanyByIdUseCase } from '../use-cases/find-company-by-id.use-case
 import { ListCompaniesUseCase } from '../use-cases/list-companies.use-case';
 import { UpdateCompanyUseCase } from '../use-cases/update-company.use-case';
 import { DeleteCompanyUseCase } from '../use-cases/delete-company.use-case';
+import { CompanyPresenter } from './company.presenter';
 
 export class CompanyController {
   constructor(
@@ -19,25 +20,25 @@ export class CompanyController {
   async create(req: Request, res: Response) {
     const result = await this.createUseCase.execute(req.body);
     if (isLeft(result)) return failureRequest(res, result.left);
-    return res.status(201).send(success(result.right));
+    return res.status(201).send(success(CompanyPresenter.toCreateOutput(result.right)));
   }
 
   async findById(req: Request, res: Response) {
     const result = await this.findByIdUseCase.execute(req.params.id);
     if (isLeft(result)) return failureRequest(res, result.left);
-    return res.status(200).send(success(result.right));
+    return res.status(200).send(success(CompanyPresenter.toFindByIdOutput(result.right)));
   }
 
   async list(req: Request, res: Response) {
     const result = await this.listUseCase.execute();
     if (isLeft(result)) return failureRequest(res, result.left);
-    return res.status(200).send(success(result.right));
+    return res.status(200).send(success(CompanyPresenter.toListOutput(result.right)));
   }
 
   async update(req: Request, res: Response) {
     const result = await this.updateUseCase.execute(req.params.id, req.body);
     if (isLeft(result)) return failureRequest(res, result.left);
-    return res.status(200).send(success(result.right));
+    return res.status(200).send(success(CompanyPresenter.toUpdateOutput(result.right)));
   }
 
   async delete(req: Request, res: Response) {

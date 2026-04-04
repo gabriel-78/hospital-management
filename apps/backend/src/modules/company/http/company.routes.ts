@@ -6,6 +6,13 @@ import { ListCompaniesUseCase } from '../use-cases/list-companies.use-case';
 import { UpdateCompanyUseCase } from '../use-cases/update-company.use-case';
 import { DeleteCompanyUseCase } from '../use-cases/delete-company.use-case';
 import { CompanyController } from './company.controller';
+import { validate } from '@/shared/middlewares/validate.middleware';
+import {
+  createCompanyInputSchema,
+  updateCompanyInputSchema,
+  findCompanyByIdInputSchema,
+  deleteCompanyInputSchema,
+} from '../schemas';
 
 const companyRouter = Router();
 
@@ -18,10 +25,20 @@ const controller = new CompanyController(
   new DeleteCompanyUseCase(repository),
 );
 
-companyRouter.post('/', (req, res) => controller.create(req, res));
+companyRouter.post('/', validate({ body: createCompanyInputSchema }), (req, res) =>
+  controller.create(req, res),
+);
 companyRouter.get('/', (req, res) => controller.list(req, res));
-companyRouter.get('/:id', (req, res) => controller.findById(req, res));
-companyRouter.put('/:id', (req, res) => controller.update(req, res));
-companyRouter.delete('/:id', (req, res) => controller.delete(req, res));
+companyRouter.get('/:id', validate({ params: findCompanyByIdInputSchema }), (req, res) =>
+  controller.findById(req, res),
+);
+companyRouter.put(
+  '/:id',
+  validate({ params: findCompanyByIdInputSchema, body: updateCompanyInputSchema }),
+  (req, res) => controller.update(req, res),
+);
+companyRouter.delete('/:id', validate({ params: deleteCompanyInputSchema }), (req, res) =>
+  controller.delete(req, res),
+);
 
 export { companyRouter };
