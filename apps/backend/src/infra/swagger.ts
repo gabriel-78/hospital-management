@@ -11,6 +11,7 @@ const swaggerDocument = {
       get: {
         tags: ['System'],
         summary: 'Health Check',
+        description: 'Verifica a saúde da API e Banco',
         responses: {
           200: {
             description: 'OK',
