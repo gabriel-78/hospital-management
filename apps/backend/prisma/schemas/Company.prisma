@@ -1,0 +1,21 @@
+enum CompanyType {
+  HOSPITAL
+  CLINIC
+}
+
+model Company {
+  id                  String      @id @default(uuid())
+  name                String
+  cnpj                String      @unique
+  type                CompanyType
+  addressStreet       String
+  addressNumber       String
+  addressComplement   String?
+  addressNeighborhood String
+  addressCity         String
+  addressState        String
+  addressZipCode      String
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  deletedAt           DateTime?
+}
