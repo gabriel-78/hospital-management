@@ -6,7 +6,7 @@ import { ListCompaniesUseCase } from '../use-cases/list-companies.use-case.js';
 import { UpdateCompanyUseCase } from '../use-cases/update-company.use-case.js';
 import { DeleteCompanyUseCase } from '../use-cases/delete-company.use-case.js';
 import { CompanyController } from './company.controller.js';
-import { validate } from '@/shared/middlewares/validate.middleware.js';
+import { validate } from '@/infra/middlewares/validate.middleware.js';
 import {
   createCompanyInputSchema,
   updateCompanyInputSchema,
