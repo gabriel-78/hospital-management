@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { isLeft } from '@/shared/either';
-import { failureRequest, success } from '@/shared/result';
-import { CreateCompanyUseCase } from '../use-cases/create-company.use-case';
-import { FindCompanyByIdUseCase } from '../use-cases/find-company-by-id.use-case';
-import { ListCompaniesUseCase } from '../use-cases/list-companies.use-case';
-import { UpdateCompanyUseCase } from '../use-cases/update-company.use-case';
-import { DeleteCompanyUseCase } from '../use-cases/delete-company.use-case';
-import { CompanyPresenter } from './company.presenter';
+import { isLeft, success } from '@shared/core';
+import { failureRequest } from '@/shared/http.js';
+import { CreateCompanyUseCase } from '../use-cases/create-company.use-case.js';
+import { FindCompanyByIdUseCase } from '../use-cases/find-company-by-id.use-case.js';
+import { ListCompaniesUseCase } from '../use-cases/list-companies.use-case.js';
+import { UpdateCompanyUseCase } from '../use-cases/update-company.use-case.js';
+import { DeleteCompanyUseCase } from '../use-cases/delete-company.use-case.js';
+import { CompanyPresenter } from './company.presenter.js';
 
 export class CompanyController {
   constructor(

@@ -1,7 +1,6 @@
-import { Either, isLeft, makeLeft, makeRight } from '@/shared/either';
-import { AppError } from '@/shared/appError';
-import { ICompanyRepository } from '../infra/company.repository';
-import { Company } from '../company.domain';
+import { Either, isLeft, makeLeft, makeRight, AppError } from '@shared/core';
+import { ICompanyRepository } from '../infra/company.repository.js';
+import { Company } from '../company.domain.js';
 
 export class FindCompanyByIdUseCase {
   constructor(private repository: ICompanyRepository) {}

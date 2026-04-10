@@ -1,6 +1,5 @@
-import { AppError } from '@/shared/appError';
-import { HealthRepository } from './health.repository';
-import { Either, isLeft, unwrapEither } from '@/shared/either';
+import { AppError, Either, isLeft, makeRight, unwrapEither } from '@shared/core';
+import { HealthRepository } from './health.repository.js';
 
 export class HealthService {
   constructor(private repository: HealthRepository) {}
@@ -14,11 +13,11 @@ export class HealthService {
 
     const result = unwrapEither(data);
 
-    return {
+    return makeRight({
       status: 'ok',
       database: true,
       message: result.message,
       timestamp: new Date().toISOString(),
-    };
+    });
   }
 }

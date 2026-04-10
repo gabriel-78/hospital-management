@@ -1,6 +1,6 @@
-import { Either, isLeft, makeLeft, makeRight } from '../either';
-import { AppError } from '../appError';
-import { ValueObject, ValueObjectConfig } from './base';
+import { Either, isLeft, makeLeft, makeRight } from "../base/either.js";
+import { AppError } from "../base/appError.js";
+import { ValueObject, ValueObjectConfig } from "./base.js";
 
 export class Cnpj extends ValueObject<string, ValueObjectConfig> {
   private static readonly CNPJ_LENGTH = 14;
@@ -15,16 +15,19 @@ export class Cnpj extends ValueObject<string, ValueObjectConfig> {
     return result.right;
   }
 
-  public static tryCreate(value: string, config?: ValueObjectConfig): Either<AppError, Cnpj> {
-    const digits = String(value ?? '').replace(/\D/g, '');
+  public static tryCreate(
+    value: string,
+    config?: ValueObjectConfig,
+  ): Either<AppError, Cnpj> {
+    const digits = String(value ?? "").replace(/\D/g, "");
     if (digits.length !== Cnpj.CNPJ_LENGTH) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'INVALID_CNPJ'));
+      return makeLeft(new AppError("VALIDATION_ERROR", "INVALID_CNPJ"));
     }
     if (!/^\d{14}$/.test(digits)) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'INVALID_CNPJ'));
+      return makeLeft(new AppError("VALIDATION_ERROR", "INVALID_CNPJ"));
     }
     if (/^(\d)\1{13}$/.test(digits)) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'INVALID_CNPJ'));
+      return makeLeft(new AppError("VALIDATION_ERROR", "INVALID_CNPJ"));
     }
     return makeRight(new Cnpj(digits, config));
   }
@@ -35,7 +38,7 @@ export class Cnpj extends ValueObject<string, ValueObjectConfig> {
   }
 
   public static format(value: string): string {
-    const digits = String(value ?? '').replace(/\D/g, '');
+    const digits = String(value ?? "").replace(/\D/g, "");
     if (digits.length !== 14) return value;
     return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8, 12)}-${digits.slice(12)}`;
   }

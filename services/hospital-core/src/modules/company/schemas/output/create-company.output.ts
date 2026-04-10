@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { companyOutputSchema } from './company.output';
+import { companyOutputSchema } from './company.output.js';
 
 export const createCompanyOutputSchema = companyOutputSchema;
 

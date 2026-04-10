@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodSchema, ZodError } from 'zod';
-import { failure } from '../result';
+import { failure } from '@shared/core';
 
 interface ValidateSchemas {
   body?: ZodSchema;
@@ -15,10 +15,10 @@ export function validate(schemas: ValidateSchemas) {
         req.body = schemas.body.parse(req.body);
       }
       if (schemas.params) {
-        req.params = schemas.params.parse(req.params);
+        req.params = schemas.params.parse(req.params) as Record<string, string>;
       }
       if (schemas.query) {
-        req.query = schemas.query.parse(req.query);
+        req.query = schemas.query.parse(req.query) as Record<string, string | string[]>;
       }
       next();
     } catch (err) {

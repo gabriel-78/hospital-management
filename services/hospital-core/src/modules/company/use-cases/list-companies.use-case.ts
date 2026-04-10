@@ -1,7 +1,6 @@
-import { Either } from '@/shared/either';
-import { AppError } from '@/shared/appError';
-import { ICompanyRepository } from '../infra/company.repository';
-import { Company } from '../company.domain';
+import { Either, AppError } from '@shared/core';
+import { ICompanyRepository } from '../infra/company.repository.js';
+import { Company } from '../company.domain.js';
 
 export class ListCompaniesUseCase {
   constructor(private repository: ICompanyRepository) {}

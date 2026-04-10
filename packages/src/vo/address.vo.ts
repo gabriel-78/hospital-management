@@ -1,6 +1,6 @@
-import { Either, isLeft, makeLeft, makeRight } from '../either';
-import { AppError } from '../appError';
-import { ValueObject, ValueObjectConfig } from './base';
+import { AppError } from "../base/appError.js";
+import { Either, isLeft, makeLeft, makeRight } from "../base/either.js";
+import { ValueObject, ValueObjectConfig } from "./base.js";
 
 export interface AddressProps {
   readonly street: string;
@@ -20,7 +20,10 @@ export class Address extends ValueObject<AddressProps, ValueObjectConfig> {
     super(value, config);
   }
 
-  public static create(props: AddressProps, config?: ValueObjectConfig): Address {
+  public static create(
+    props: AddressProps,
+    config?: ValueObjectConfig,
+  ): Address {
     const result = Address.tryCreate(props, config);
     if (isLeft(result)) throw result.left;
     return result.right;
@@ -31,26 +34,42 @@ export class Address extends ValueObject<AddressProps, ValueObjectConfig> {
     config?: ValueObjectConfig,
   ): Either<AppError, Address> {
     if (!props.street?.trim()) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'ADDRESS_STREET_REQUIRED'));
+      return makeLeft(
+        new AppError("VALIDATION_ERROR", "ADDRESS_STREET_REQUIRED"),
+      );
     }
     if (!props.number?.trim()) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'ADDRESS_NUMBER_REQUIRED'));
+      return makeLeft(
+        new AppError("VALIDATION_ERROR", "ADDRESS_NUMBER_REQUIRED"),
+      );
     }
     if (!props.neighborhood?.trim()) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'ADDRESS_NEIGHBORHOOD_REQUIRED'));
+      return makeLeft(
+        new AppError("VALIDATION_ERROR", "ADDRESS_NEIGHBORHOOD_REQUIRED"),
+      );
     }
     if (!props.city?.trim()) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'ADDRESS_CITY_REQUIRED'));
+      return makeLeft(
+        new AppError("VALIDATION_ERROR", "ADDRESS_CITY_REQUIRED"),
+      );
     }
 
     const state = props.state?.trim().toUpperCase();
-    if (!state || state.length !== Address.STATE_LENGTH || !/^[A-Z]{2}$/.test(state)) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'ADDRESS_STATE_INVALID'));
+    if (
+      !state ||
+      state.length !== Address.STATE_LENGTH ||
+      !/^[A-Z]{2}$/.test(state)
+    ) {
+      return makeLeft(
+        new AppError("VALIDATION_ERROR", "ADDRESS_STATE_INVALID"),
+      );
     }
 
-    const zipDigits = String(props.zipCode ?? '').replace(/\D/g, '');
+    const zipDigits = String(props.zipCode ?? "").replace(/\D/g, "");
     if (zipDigits.length !== Address.ZIP_CODE_LENGTH) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'ADDRESS_ZIP_CODE_INVALID'));
+      return makeLeft(
+        new AppError("VALIDATION_ERROR", "ADDRESS_ZIP_CODE_INVALID"),
+      );
     }
 
     return makeRight(

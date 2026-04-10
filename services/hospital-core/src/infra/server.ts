@@ -1,10 +1,9 @@
-import { env } from './env';
 import express from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
-
-import { router } from './routes';
-import { swaggerDocument } from './swagger';
+import { swaggerDocument } from './swagger.js';
+import { router } from './routes.js';
+import { env } from './env.js';
 
 const app = express();
 

@@ -1,6 +1,5 @@
-import { Either } from '@/shared/either';
-import { AppError } from '@/shared/appError';
-import { Company } from '../company.domain';
+import { Either, AppError } from '@shared/core';
+import { Company } from '../company.domain.js';
 
 export interface ICompanyRepository {
   create(company: Company): Promise<Either<AppError, Company>>;

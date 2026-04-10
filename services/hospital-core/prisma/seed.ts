@@ -1,6 +1,6 @@
-import { pool, prisma } from '@/infra/database/prisma';
-import { seedHealthCheck } from './seed/healthcheck.seed';
-import { seedCompanies } from './seed/company.seed';
+import { pool, prisma } from '@/infra/database/prisma.js';
+import { seedHealthCheck } from './seed/healthcheck.seed.js';
+import { seedCompanies } from './seed/company.seed.js';
 
 async function main() {
   try {

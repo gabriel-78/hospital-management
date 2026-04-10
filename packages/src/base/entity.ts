@@ -1,6 +1,6 @@
-import { Either } from './either';
-import { AppError } from './appError';
-import { Id } from './vo/id.vo';
+import { Either } from "./either.js";
+import { AppError } from "./appError.js";
+import { Id } from "../vo/id.vo.js";
 
 export interface EntityProps {
   id?: Id;
@@ -52,7 +52,11 @@ export abstract class Entity<Type, Props extends EntityProps> {
 
   private deepMerge(target: any, source: any): any {
     for (const key of Object.keys(source)) {
-      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      if (
+        source[key] &&
+        typeof source[key] === "object" &&
+        !Array.isArray(source[key])
+      ) {
         if (!target[key]) target[key] = {};
         this.deepMerge(target[key], source[key]);
       } else {
