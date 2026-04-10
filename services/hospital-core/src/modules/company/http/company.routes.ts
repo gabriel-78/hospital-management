@@ -1,18 +1,18 @@
 import { Router } from 'express';
-import { PrismaCompanyRepository } from '../infra/prisma-company.repository';
-import { CreateCompanyUseCase } from '../use-cases/create-company.use-case';
-import { FindCompanyByIdUseCase } from '../use-cases/find-company-by-id.use-case';
-import { ListCompaniesUseCase } from '../use-cases/list-companies.use-case';
-import { UpdateCompanyUseCase } from '../use-cases/update-company.use-case';
-import { DeleteCompanyUseCase } from '../use-cases/delete-company.use-case';
-import { CompanyController } from './company.controller';
-import { validate } from '@/shared/middlewares/validate.middleware';
+import { PrismaCompanyRepository } from '../infra/prisma-company.repository.js';
+import { CreateCompanyUseCase } from '../use-cases/create-company.use-case.js';
+import { FindCompanyByIdUseCase } from '../use-cases/find-company-by-id.use-case.js';
+import { ListCompaniesUseCase } from '../use-cases/list-companies.use-case.js';
+import { UpdateCompanyUseCase } from '../use-cases/update-company.use-case.js';
+import { DeleteCompanyUseCase } from '../use-cases/delete-company.use-case.js';
+import { CompanyController } from './company.controller.js';
+import { validate } from '@/shared/middlewares/validate.middleware.js';
 import {
   createCompanyInputSchema,
   updateCompanyInputSchema,
   findCompanyByIdInputSchema,
   deleteCompanyInputSchema,
-} from '../schemas';
+} from '../schemas/index.js';
 
 const companyRouter = Router();
 

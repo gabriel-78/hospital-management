@@ -1,6 +1,5 @@
-import { prisma } from '@/infra/database/prisma';
-import { AppError } from '@/shared/appError';
-import { Either, makeLeft, makeRight } from '@/shared/either';
+import { prisma } from '@/infra/database/prisma.js';
+import { AppError, Either, makeLeft, makeRight } from '@shared/core';
 
 export class HealthRepository {
   async getStatus(): Promise<Either<AppError, unknown>> {

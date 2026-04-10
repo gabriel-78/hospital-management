@@ -1,11 +1,8 @@
-import { Either, isLeft, makeLeft, makeRight } from '../../shared/either';
-import { AppError } from '../../shared/appError';
-import { Entity, EntityProps } from '../../shared/entity';
-import { Id } from '../../shared/vo/id.vo';
-import { Name } from '../../shared/vo/name.vo';
-import { Cnpj } from '../../shared/vo/cnpj.vo';
-import { Address } from '../../shared/vo/address.vo';
-import { CompanyType } from '../../shared/vo/company-type.vo';
+import {
+  Either, isLeft, makeLeft, makeRight,
+  AppError, Entity, EntityProps,
+  Id, Name, Cnpj, Address, CompanyType,
+} from '@shared/core';
 
 export interface CompanyProps extends EntityProps {
   name: Name;

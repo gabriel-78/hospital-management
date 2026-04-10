@@ -1,13 +1,16 @@
-import { Either, isLeft, makeLeft, makeRight } from '../either';
-import { AppError } from '../appError';
-import { ValueObject, ValueObjectConfig } from './base';
+import { Either, isLeft, makeLeft, makeRight } from "../base/either.js";
+import { AppError } from "../base/appError.js";
+import { ValueObject, ValueObjectConfig } from "./base.js";
 
 export enum CompanyTypeEnum {
-  HOSPITAL = 'HOSPITAL',
-  CLINIC = 'CLINIC',
+  HOSPITAL = "HOSPITAL",
+  CLINIC = "CLINIC",
 }
 
-export class CompanyType extends ValueObject<CompanyTypeEnum, ValueObjectConfig> {
+export class CompanyType extends ValueObject<
+  CompanyTypeEnum,
+  ValueObjectConfig
+> {
   private constructor(value: CompanyTypeEnum, config?: ValueObjectConfig) {
     super(value, config);
   }
@@ -22,15 +25,15 @@ export class CompanyType extends ValueObject<CompanyTypeEnum, ValueObjectConfig>
     value: string,
     config?: ValueObjectConfig,
   ): Either<AppError, CompanyType> {
-    const normalized = String(value ?? '')
+    const normalized = String(value ?? "")
       .trim()
       .toUpperCase();
     const validValues = Object.values(CompanyTypeEnum);
     if (!validValues.includes(normalized as CompanyTypeEnum)) {
       return makeLeft(
         new AppError(
-          'VALIDATION_ERROR',
-          `COMPANY_TYPE_INVALID: must be one of ${validValues.join(', ')}`,
+          "VALIDATION_ERROR",
+          `COMPANY_TYPE_INVALID: must be one of ${validValues.join(", ")}`,
         ),
       );
     }

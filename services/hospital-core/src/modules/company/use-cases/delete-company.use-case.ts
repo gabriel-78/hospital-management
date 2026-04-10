@@ -1,6 +1,5 @@
-import { Either, isLeft, makeLeft } from '@/shared/either';
-import { AppError } from '@/shared/appError';
-import { ICompanyRepository } from '../infra/company.repository';
+import { Either, isLeft, makeLeft, AppError } from '@shared/core';
+import { ICompanyRepository } from '../infra/company.repository.js';
 
 export class DeleteCompanyUseCase {
   constructor(private repository: ICompanyRepository) {}

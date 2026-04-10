@@ -1,6 +1,6 @@
-import { Either, isLeft, makeLeft, makeRight } from '../either';
-import { AppError } from '../appError';
-import { ValueObject, ValueObjectConfig } from './base';
+import { Either, isLeft, makeLeft, makeRight } from "../base/either.js";
+import { AppError } from "../base/appError.js";
+import { ValueObject, ValueObjectConfig } from "./base.js";
 
 export class Name extends ValueObject<string, ValueObjectConfig> {
   private static readonly MIN_LENGTH = 2;
@@ -16,16 +16,19 @@ export class Name extends ValueObject<string, ValueObjectConfig> {
     return result.right;
   }
 
-  public static tryCreate(value: string, config?: ValueObjectConfig): Either<AppError, Name> {
-    const trimmed = String(value ?? '').trim();
+  public static tryCreate(
+    value: string,
+    config?: ValueObjectConfig,
+  ): Either<AppError, Name> {
+    const trimmed = String(value ?? "").trim();
     if (!trimmed) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'NAME_REQUIRED'));
+      return makeLeft(new AppError("VALIDATION_ERROR", "NAME_REQUIRED"));
     }
     if (trimmed.length < Name.MIN_LENGTH) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'NAME_TOO_SHORT'));
+      return makeLeft(new AppError("VALIDATION_ERROR", "NAME_TOO_SHORT"));
     }
     if (trimmed.length > Name.MAX_LENGTH) {
-      return makeLeft(new AppError('VALIDATION_ERROR', 'NAME_TOO_LONG'));
+      return makeLeft(new AppError("VALIDATION_ERROR", "NAME_TOO_LONG"));
     }
     return makeRight(new Name(trimmed, config));
   }

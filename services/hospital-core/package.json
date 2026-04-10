@@ -21,7 +21,8 @@
     "uuid": "^13.0.0",
     "zod": "^4.3.6",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "@shared/core": "file:../../packages"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

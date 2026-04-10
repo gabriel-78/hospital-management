@@ -1,9 +1,6 @@
-import { Either, isLeft, makeLeft } from '@/shared/either';
-import { AppError } from '@/shared/appError';
-import { Name } from '@/shared/vo/name.vo';
-import { Address, AddressProps } from '@/shared/vo/address.vo';
-import { ICompanyRepository } from '../infra/company.repository';
-import { Company } from '../company.domain';
+import { Either, isLeft, makeLeft, AppError, Name, Address, AddressProps } from '@shared/core';
+import { ICompanyRepository } from '../infra/company.repository.js';
+import { Company } from '../company.domain.js';
 
 export interface UpdateCompanyDTO {
   name?: string;

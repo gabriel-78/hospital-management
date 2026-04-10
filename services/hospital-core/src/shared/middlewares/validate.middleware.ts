@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodSchema, ZodError } from 'zod';
-import { failure } from '../result';
+import { failure } from '@shared/core';
 
 interface ValidateSchemas {
   body?: ZodSchema;

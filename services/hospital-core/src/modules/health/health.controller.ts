@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { HealthService } from './health.service';
-import { failureRequest, success } from '@/shared/result';
-import { isLeft } from '@/shared/either';
+import { HealthService } from './health.service.js';
+import { isLeft, success } from '@shared/core';
+import { failureRequest } from '@/shared/http.js';
 
 export class HealthController {
   constructor(private service: HealthService) {}

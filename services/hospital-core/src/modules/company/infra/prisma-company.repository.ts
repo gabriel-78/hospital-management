@@ -1,9 +1,8 @@
-import { prisma } from '@/infra/database/prisma';
-import { Either, isLeft, makeLeft, makeRight } from '@/shared/either';
-import { AppError } from '@/shared/appError';
-import { Company } from '../company.domain';
-import { ICompanyRepository } from './company.repository';
-import { CompanyMapper } from './company.mapper';
+import { prisma } from '@/infra/database/prisma.js';
+import { Either, isLeft, makeLeft, makeRight, AppError } from '@shared/core';
+import { Company } from '../company.domain.js';
+import { ICompanyRepository } from './company.repository.js';
+import { CompanyMapper } from './company.mapper.js';
 
 export class PrismaCompanyRepository implements ICompanyRepository {
   async create(company: Company): Promise<Either<AppError, Company>> {

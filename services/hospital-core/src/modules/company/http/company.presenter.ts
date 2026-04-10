@@ -1,4 +1,4 @@
-import { Company } from '../company.domain';
+import { Company } from '../company.domain.js';
 import {
   createCompanyOutputSchema,
   CreateCompanyOutput,
@@ -8,7 +8,7 @@ import {
   ListCompaniesOutput,
   updateCompanyOutputSchema,
   UpdateCompanyOutput,
-} from '../schemas/output';
+} from '../schemas/output/index.js';
 
 const toPlain = (company: Company) => ({
   id: company.id.value,
