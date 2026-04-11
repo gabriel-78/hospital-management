@@ -14,7 +14,6 @@
     "types": ["node"],
     "paths": {
       "@/*": ["./src/*"]
-      // "@shared/core": ["../../packages/src/index.ts"]
     },
     "experimentalDecorators": true,
     "allowArbitraryExtensions": true
