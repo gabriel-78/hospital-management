@@ -1,0 +1,49 @@
+{
+  "name": "pharma-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch --env-file .env src/infra/server.ts",
+    "studio": "prisma studio",
+    "migrate": "prisma migrate dev",
+    "gen-seed": "prisma db seed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@prisma/client": "^7.6.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "prisma": "^7.6.0",
+    "uuid": "^13.0.0",
+    "zod": "^4.3.6",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "@shared/core": "file:../../packages"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@prisma/adapter-pg": "^7.6.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.5.2",
+    "@types/pg": "^8.20.0",
+    "@types/uuid": "^10.0.0",
+    "dotenv": "^17.4.0",
+    "eslint": "^10.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.4.0",
+    "pg": "^8.20.0",
+    "prettier": "^3.8.1",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.0",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8"
+  }
+}

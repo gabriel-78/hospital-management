@@ -1,0 +1,5 @@
+model HealthCheck {
+    id        String   @id @default(uuid())
+    message   String
+    createdAt DateTime @default(now())
+}
