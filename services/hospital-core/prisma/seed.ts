@@ -1,6 +1,7 @@
 import { pool, prisma } from '@/infra/database/prisma.js';
 import { seedHealthCheck } from './seed/healthcheck.seed.js';
 import { seedCompanies } from './seed/company.seed.js';
+import { seedDoctors } from './seed/doctor.seed.js';
 
 async function main() {
   try {
@@ -11,6 +12,7 @@ async function main() {
     });
 
     await seedCompanies(prisma);
+    await seedDoctors(prisma);
 
     console.log('✅ Seed finalizado');
   } finally {
