@@ -82,6 +82,187 @@ const swaggerDocument = {
         },
       },
     },
+    '/consultations': {
+      get: {
+        tags: ['Consultations'],
+        summary: 'List all consultations',
+        description: 'Returns all active consultations (not soft-deleted)',
+        responses: {
+          200: {
+            description: 'OK',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: {
+                      type: 'array',
+                      items: { $ref: '#/components/schemas/Consultation' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      post: {
+        tags: ['Consultations'],
+        summary: 'Schedule a consultation',
+        description:
+          'Creates a new consultation with SCHEDULED status. scheduledAt must be a future datetime. Doctor and patient must exist and have no conflicting consultation at the same time.',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/CreateConsultationInput' },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: 'Created',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: { $ref: '#/components/schemas/Consultation' },
+                  },
+                },
+              },
+            },
+          },
+          400: { $ref: '#/components/responses/DomainError' },
+          404: { $ref: '#/components/responses/NotFound' },
+          422: { $ref: '#/components/responses/ValidationError' },
+        },
+      },
+    },
+    '/consultations/{id}': {
+      get: {
+        tags: ['Consultations'],
+        summary: 'Find consultation by ID',
+        parameters: [{ $ref: '#/components/parameters/IdParam' }],
+        responses: {
+          200: {
+            description: 'OK',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: { $ref: '#/components/schemas/Consultation' },
+                  },
+                },
+              },
+            },
+          },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+      delete: {
+        tags: ['Consultations'],
+        summary: 'Soft-delete a consultation',
+        parameters: [{ $ref: '#/components/parameters/IdParam' }],
+        responses: {
+          204: { description: 'No Content' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
+    '/consultations/{id}/cancel': {
+      patch: {
+        tags: ['Consultations'],
+        summary: 'Cancel a consultation',
+        description: 'Cancels a consultation. Only allowed when status is SCHEDULED.',
+        parameters: [{ $ref: '#/components/parameters/IdParam' }],
+        responses: {
+          200: {
+            description: 'Cancelled',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: { $ref: '#/components/schemas/Consultation' },
+                  },
+                },
+              },
+            },
+          },
+          400: { $ref: '#/components/responses/DomainError' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
+    '/consultations/{id}/complete': {
+      patch: {
+        tags: ['Consultations'],
+        summary: 'Complete a consultation',
+        description:
+          'Marks a consultation as COMPLETED. Only allowed when status is SCHEDULED and scheduledAt is in the past.',
+        parameters: [{ $ref: '#/components/parameters/IdParam' }],
+        responses: {
+          200: {
+            description: 'Completed',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: { $ref: '#/components/schemas/Consultation' },
+                  },
+                },
+              },
+            },
+          },
+          400: { $ref: '#/components/responses/DomainError' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
+    '/consultations/{id}/reschedule': {
+      patch: {
+        tags: ['Consultations'],
+        summary: 'Reschedule a consultation',
+        description:
+          'Updates scheduledAt. Only allowed when status is SCHEDULED, new date must be future, and neither doctor nor patient can have a conflicting consultation at the new time.',
+        parameters: [{ $ref: '#/components/parameters/IdParam' }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/RescheduleConsultationInput' },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'Rescheduled',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: { $ref: '#/components/schemas/Consultation' },
+                  },
+                },
+              },
+            },
+          },
+          400: { $ref: '#/components/responses/DomainError' },
+          404: { $ref: '#/components/responses/NotFound' },
+          422: { $ref: '#/components/responses/ValidationError' },
+        },
+      },
+    },
     '/patients': {
       get: {
         tags: ['Patients'],
@@ -415,6 +596,47 @@ const swaggerDocument = {
           createdAt: { type: 'string', format: 'date-time' },
           updatedAt: { type: 'string', format: 'date-time' },
           deletedAt: { type: 'string', format: 'date-time', nullable: true },
+        },
+      },
+      Consultation: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          doctorId: { type: 'string', format: 'uuid' },
+          patientId: { type: 'string', format: 'uuid' },
+          scheduledAt: { type: 'string', format: 'date-time' },
+          status: {
+            type: 'string',
+            enum: ['SCHEDULED', 'CANCELLED', 'COMPLETED'],
+            example: 'SCHEDULED',
+          },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+          deletedAt: { type: 'string', format: 'date-time', nullable: true },
+        },
+      },
+      CreateConsultationInput: {
+        type: 'object',
+        required: ['doctorId', 'patientId', 'scheduledAt'],
+        properties: {
+          doctorId: { type: 'string', format: 'uuid' },
+          patientId: { type: 'string', format: 'uuid' },
+          scheduledAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-01T10:00:00.000Z',
+          },
+        },
+      },
+      RescheduleConsultationInput: {
+        type: 'object',
+        required: ['scheduledAt'],
+        properties: {
+          scheduledAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-15T14:00:00.000Z',
+          },
         },
       },
       Patient: {

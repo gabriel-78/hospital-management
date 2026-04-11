@@ -1,8 +1,9 @@
 model Doctor {
-  id        String    @id @default(uuid())
-  name      String
-  crm       String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id            String         @id @default(uuid())
+  name          String
+  crm           String         @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+  consultations Consultation[]
 }
