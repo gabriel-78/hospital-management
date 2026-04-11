@@ -82,6 +82,122 @@ const swaggerDocument = {
         },
       },
     },
+    '/patients': {
+      get: {
+        tags: ['Patients'],
+        summary: 'List all patients',
+        description: 'Returns all active patients (not soft-deleted)',
+        responses: {
+          200: {
+            description: 'OK',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: { type: 'array', items: { $ref: '#/components/schemas/Patient' } },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      post: {
+        tags: ['Patients'],
+        summary: 'Create a patient',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/CreatePatientInput' },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: 'Created',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: { $ref: '#/components/schemas/Patient' },
+                  },
+                },
+              },
+            },
+          },
+          422: { $ref: '#/components/responses/ValidationError' },
+        },
+      },
+    },
+    '/patients/{id}': {
+      get: {
+        tags: ['Patients'],
+        summary: 'Find patient by ID',
+        parameters: [{ $ref: '#/components/parameters/IdParam' }],
+        responses: {
+          200: {
+            description: 'OK',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: { $ref: '#/components/schemas/Patient' },
+                  },
+                },
+              },
+            },
+          },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+      put: {
+        tags: ['Patients'],
+        summary: 'Update patient name',
+        parameters: [{ $ref: '#/components/parameters/IdParam' }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/UpdatePatientInput' },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'Updated',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: { $ref: '#/components/schemas/Patient' },
+                  },
+                },
+              },
+            },
+          },
+          404: { $ref: '#/components/responses/NotFound' },
+          422: { $ref: '#/components/responses/ValidationError' },
+        },
+      },
+      delete: {
+        tags: ['Patients'],
+        summary: 'Soft-delete a patient',
+        parameters: [{ $ref: '#/components/parameters/IdParam' }],
+        responses: {
+          204: { description: 'No Content' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
     '/doctors': {
       get: {
         tags: ['Doctors'],
@@ -299,6 +415,30 @@ const swaggerDocument = {
           createdAt: { type: 'string', format: 'date-time' },
           updatedAt: { type: 'string', format: 'date-time' },
           deletedAt: { type: 'string', format: 'date-time', nullable: true },
+        },
+      },
+      Patient: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          name: { type: 'string', example: 'João Pedro Alves' },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+          deletedAt: { type: 'string', format: 'date-time', nullable: true },
+        },
+      },
+      CreatePatientInput: {
+        type: 'object',
+        required: ['name'],
+        properties: {
+          name: { type: 'string', minLength: 2, maxLength: 255, example: 'João Pedro Alves' },
+        },
+      },
+      UpdatePatientInput: {
+        type: 'object',
+        required: ['name'],
+        properties: {
+          name: { type: 'string', minLength: 2, maxLength: 255, example: 'João Pedro Alves' },
         },
       },
       Doctor: {
