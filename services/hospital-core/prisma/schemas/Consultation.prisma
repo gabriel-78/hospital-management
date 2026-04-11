@@ -1,0 +1,22 @@
+enum ConsultationStatus {
+  SCHEDULED
+  CANCELLED
+  COMPLETED
+}
+
+model Consultation {
+  id          String             @id @default(uuid())
+  doctorId    String
+  patientId   String
+  scheduledAt DateTime
+  status      ConsultationStatus @default(SCHEDULED)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  deletedAt   DateTime?
+
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+  patient Patient @relation(fields: [patientId], references: [id])
+
+  @@index([doctorId, scheduledAt])
+  @@index([patientId, scheduledAt])
+}
