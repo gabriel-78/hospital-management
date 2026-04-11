@@ -1,5 +1,6 @@
 import { pool, prisma } from '@/infra/database/prisma.js';
 import { seedHealthCheck } from './seed/healthcheck.seed.js';
+import { seedProducts } from './seed/product.seed.js';
 
 async function main() {
   try {
@@ -7,6 +8,7 @@ async function main() {
 
     await prisma.$transaction(async (tx) => {
       await seedHealthCheck(tx);
+      await seedProducts(tx);
     });
 
     console.log('✅ Seed finalizado');
