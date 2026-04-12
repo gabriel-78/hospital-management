@@ -1,4 +1,4 @@
-import { ManageConsultationDialog } from "@/components/Dialogs/Consultation/Manage";
+import { ManageConsultationDialog } from "../components/Dialogs/Manage";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import {

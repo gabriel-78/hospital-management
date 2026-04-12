@@ -1,7 +1,7 @@
 import { AppLayout } from "@/components/Layouts/AppLayout";
 import { PatientLayout } from "@/components/Layouts/PatientLayout";
 import { RootPage } from "@/pages/RootPage";
-import { ScheduleConsultations } from "@/pages/ScheduleConsultations";
+import { ScheduleConsultations } from "@/modules/consultation/pages/ScheduleConsultations";
 import { useSessionStore } from "@/stores";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 

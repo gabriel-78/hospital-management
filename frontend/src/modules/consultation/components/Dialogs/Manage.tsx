@@ -4,8 +4,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogContent,
-} from "../../ui/dialog";
-import { Button } from "../../ui/button";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 

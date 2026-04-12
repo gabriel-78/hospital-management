@@ -15,4 +15,14 @@ export const queryKeys = {
       update: (id?: string) => [queryKeys.doctors.list()],
     },
   },
+  consultations: {
+    list: () => ["list-consultations"],
+    invalidations: {
+      delete:     (id?: string) => [queryKeys.consultations.list()],
+      create:     (id?: string) => [queryKeys.consultations.list()],
+      reschedule: (id?: string) => [queryKeys.consultations.list()],
+      cancel:     (id?: string) => [queryKeys.consultations.list()],
+      complete:   (id?: string) => [queryKeys.consultations.list()],
+    },
+  },
 };
