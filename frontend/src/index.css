@@ -1,0 +1,144 @@
+/* @import "tailwindcss"; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand */
+    --brand-dark: #124b2b;
+    --brand-base: #1f6f43;
+
+    /* Grayscale */
+    --gray-800: #111827;
+    --gray-700: #374151;
+    --gray-600: #4b5563;
+    --gray-500: #6b7280;
+    --gray-400: #9ca3af;
+    --gray-300: #d1d5db;
+    --gray-200: #e5e7eb;
+    --gray-100: #f8f9fa;
+
+    /* Neutral */
+    --black: #000000;
+    --white: #ffffff;
+
+    /* Feedback */
+    --danger: #ef4444;
+    --success: #19ad70;
+
+    /* Blue */
+    --blue-dark: #1d4ed8;
+    --blue-base: #2563eb;
+    --blue-light: #dbeafe;
+
+    /* Purple */
+    --purple-dark: #7e22ce;
+    --purple-base: #9333ea;
+    --purple-light: #f3e8ff;
+
+    /* Pink */
+    --pink-dark: #be185d;
+    --pink-base: #db2777;
+    --pink-light: #fce7f3;
+
+    /* Red */
+    --red-dark: #b91c1c;
+    --red-base: #dc2626;
+    --red-light: #fee2e2;
+
+    /* Orange */
+    --orange-dark: #c2410c;
+    --orange-base: #ea580c;
+    --orange-light: #ffedd5;
+
+    /* Yellow */
+    --yellow-dark: #a16207;
+    --yellow-base: #ca8a04;
+    --yellow-light: #fef3c7;
+
+    /* Green */
+    --green-dark: #15803d;
+    --green-base: #16a34a;
+    --green-light: #e0fae9;
+
+    --background: var(--white);
+    --foreground: var(--gray-800);
+
+    --card: var(--white);
+    --card-foreground: var(--gray-800);
+
+    --popover: var(--white);
+    --popover-foreground: var(--gray-800);
+
+    --primary: var(--brand-base);
+    --primary-foreground: var(--white);
+
+    --secondary: var(--gray-100);
+    --secondary-foreground: var(--gray-800);
+
+    --muted: var(--gray-100);
+    --muted-foreground: var(--gray-500);
+
+    --accent: var(--gray-200);
+    --accent-foreground: var(--gray-800);
+
+    --destructive: var(--danger);
+    --destructive-foreground: var(--white);
+
+    --border: var(--gray-200);
+    --input: var(--gray-200);
+    --ring: var(--brand-base);
+
+    --radius: 0.5rem;
+
+    /* Charts */
+    --chart-1: var(--blue-base);
+    --chart-2: var(--green-base);
+    --chart-3: var(--purple-base);
+    --chart-4: var(--orange-base);
+    --chart-5: var(--pink-base);
+  }
+
+  .dark {
+    --background: var(--gray-800);
+    --foreground: var(--white);
+
+    --card: var(--gray-700);
+    --card-foreground: var(--white);
+
+    --popover: var(--gray-700);
+    --popover-foreground: var(--white);
+
+    --primary: var(--brand-base);
+    --primary-foreground: var(--white);
+
+    --secondary: var(--gray-700);
+    --secondary-foreground: var(--white);
+
+    --muted: var(--gray-700);
+    --muted-foreground: var(--gray-400);
+
+    --accent: var(--gray-600);
+    --accent-foreground: var(--white);
+
+    --destructive: var(--danger);
+    --destructive-foreground: var(--white);
+
+    --border: var(--gray-600);
+    --input: var(--gray-600);
+    --ring: var(--brand-base);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
