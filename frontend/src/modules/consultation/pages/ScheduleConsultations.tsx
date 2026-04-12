@@ -9,14 +9,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Consultation } from "@/types/consultation";
+import type { ConsultationResponse } from "../schemas";
 import { Plus, SquarePen, Trash } from "lucide-react";
 import { useMemo, useState } from "react";
 
 export function ScheduleConsultations() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [selectedConsultation, setSelectedConsultation] = useState<
-    Consultation | undefined
+    ConsultationResponse | undefined
   >(undefined);
 
   const onDeleteConsultation = async (id: string) => {
