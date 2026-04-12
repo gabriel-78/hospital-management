@@ -7,4 +7,12 @@ export const queryKeys = {
       update: (id?: string) => [queryKeys.patients.list()],
     },
   },
+  doctors: {
+    list: () => ["list-doctors"],
+    invalidations: {
+      delete: (id?: string) => [queryKeys.doctors.list()],
+      create: (id?: string) => [queryKeys.doctors.list()],
+      update: (id?: string) => [queryKeys.doctors.list()],
+    },
+  },
 };

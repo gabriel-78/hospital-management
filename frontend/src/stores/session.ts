@@ -1,3 +1,4 @@
+import type { DoctorResponse } from "@/modules/doctor/schemas";
 import type { PatientResponse } from "@/modules/patient/schemas";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -9,7 +10,9 @@ export interface SessionState {
   patient: PatientResponse | null;
   changePatient: (value: PatientResponse) => void;
   cleanPatient: () => void;
-  doctor: null;
+  doctor: DoctorResponse | null;
+  cleanDoctor: () => void;
+  changeDoctor: (value: DoctorResponse) => void;
 }
 
 export const useSessionStore = create<SessionState>()(
@@ -22,6 +25,8 @@ export const useSessionStore = create<SessionState>()(
       changePatient: (value: PatientResponse) => set({ patient: value }),
       cleanPatient: () => set({ patient: null, session: "patient" }),
       doctor: null,
+      changeDoctor: (value: DoctorResponse) => set({ doctor: value }),
+      cleanDoctor: () => set({ doctor: null, session: "doctor" }),
     }),
     {
       name: "session-storage",
