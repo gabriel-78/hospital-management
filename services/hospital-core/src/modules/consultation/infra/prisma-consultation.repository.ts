@@ -2,7 +2,11 @@ import { ConsultationStatus } from '@prisma/client';
 import { AppError, Either, isLeft, makeLeft, makeRight } from '@shared/core';
 import { prisma } from '@/infra/database/prisma.js';
 import { Consultation } from '../consultation.domain.js';
-import { IConsultationRepository } from './consultation.repository.js';
+import {
+  ConsultationListItem,
+  IConsultationRepository,
+  ListConsultationsFilters,
+} from './consultation.repository.js';
 import { ConsultationMapper } from './consultation.mapper.js';
 
 export class PrismaConsultationRepository implements IConsultationRepository {
@@ -74,18 +78,27 @@ export class PrismaConsultationRepository implements IConsultationRepository {
     return makeRight(result.right);
   }
 
-  async list(): Promise<Either<AppError, Consultation[]>> {
-    const rows = await prisma.consultation.findMany({ where: { deletedAt: null } });
+  async list(filters?: ListConsultationsFilters): Promise<Either<AppError, ConsultationListItem[]>> {
+    const rows = await prisma.consultation.findMany({
+      where: {
+        deletedAt: null,
+        ...(filters?.patientId ? { patientId: filters.patientId } : {}),
+        ...(filters?.status?.length
+          ? { status: { in: filters.status as ConsultationStatus[] } }
+          : {}),
+      },
+      include: { doctor: { select: { name: true } } },
+    });
 
-    const consultations: Consultation[] = [];
+    const results: ConsultationListItem[] = [];
 
     for (const raw of rows) {
       const result = ConsultationMapper.toDomain(raw);
       if (isLeft(result)) return makeLeft(result.left);
-      consultations.push(result.right);
+      results.push({ consultation: result.right, doctorName: raw.doctor.name });
     }
 
-    return makeRight(consultations);
+    return makeRight(results);
   }
 
   async save(consultation: Consultation): Promise<Either<AppError, Consultation>> {

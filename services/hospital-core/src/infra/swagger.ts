@@ -85,8 +85,33 @@ const swaggerDocument = {
     '/consultations': {
       get: {
         tags: ['Consultations'],
-        summary: 'List all consultations',
-        description: 'Returns all active consultations (not soft-deleted)',
+        summary: 'List consultations',
+        description:
+          'Returns active consultations (not soft-deleted). Supports optional filtering by patientId and one or more status values. When no status is provided, all statuses are returned. Each item includes the doctor name resolved from the relation.',
+        parameters: [
+          {
+            name: 'patientId',
+            in: 'query',
+            required: false,
+            schema: { type: 'string', format: 'uuid' },
+            description: 'Filter consultations by patient ID.',
+          },
+          {
+            name: 'status',
+            in: 'query',
+            required: false,
+            explode: true,
+            schema: {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: ['SCHEDULED', 'CANCELLED', 'COMPLETED'],
+              },
+            },
+            description:
+              'Filter by one or more statuses. Accepts repeated query params: ?status=SCHEDULED&status=COMPLETED. Omit to return all statuses.',
+          },
+        ],
         responses: {
           200: {
             description: 'OK',
@@ -98,13 +123,14 @@ const swaggerDocument = {
                     isSuccess: { type: 'boolean', example: true },
                     data: {
                       type: 'array',
-                      items: { $ref: '#/components/schemas/Consultation' },
+                      items: { $ref: '#/components/schemas/ConsultationListItem' },
                     },
                   },
                 },
               },
             },
           },
+          422: { $ref: '#/components/responses/ValidationError' },
         },
       },
       post: {
@@ -614,6 +640,18 @@ const swaggerDocument = {
           updatedAt: { type: 'string', format: 'date-time' },
           deletedAt: { type: 'string', format: 'date-time', nullable: true },
         },
+      },
+      ConsultationListItem: {
+        allOf: [
+          { $ref: '#/components/schemas/Consultation' },
+          {
+            type: 'object',
+            required: ['doctorName'],
+            properties: {
+              doctorName: { type: 'string', example: 'Ana Paula Ferreira' },
+            },
+          },
+        ],
       },
       CreateConsultationInput: {
         type: 'object',
