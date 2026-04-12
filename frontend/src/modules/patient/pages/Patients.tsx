@@ -1,16 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useListPatients } from "../hooks/useListPatients";
 import { BaseCard } from "../components/Cards/Base";
 import type { PatientResponse } from "../schemas";
 import { ManagePatientDialog } from "../components/Dialogs/Manage";
+import { useSessionStore } from "@/stores";
 
 export function Patients() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [selectedPatient, setSelectedPatient] = useState<
     PatientResponse | undefined
   >(undefined);
+
+  const { changePatient, cleanPatient, changeSession } = useSessionStore(
+    (state) => state,
+  );
 
   const patientsQuery = useListPatients();
 
@@ -19,6 +24,11 @@ export function Patients() {
 
     return patientsQuery.data.data ?? [];
   }, [patientsQuery.data]);
+
+  useEffect(() => {
+    changeSession("patient");
+    cleanPatient();
+  }, []);
 
   return (
     <div className="flex flex-col p-12 gap-8 w-full">
@@ -44,8 +54,12 @@ export function Patients() {
           <BaseCard
             key={patient.id}
             patient={patient}
-            onSelected={(value) => {
-              setSelectedPatient(value);
+            onSelected={(value, type) => {
+              if (type === "select") {
+                changePatient(value);
+              } else if (type === "edit") {
+                setSelectedPatient(value);
+              }
             }}
           />
         ))}

@@ -6,7 +6,7 @@ import { useDeletePatient } from "../../hooks/useDeletePatients";
 
 interface BaseCardProps {
   patient: PatientResponse;
-  onSelected: (value: PatientResponse) => void;
+  onSelected: (value: PatientResponse, type: "edit" | "select") => void;
 }
 
 export function BaseCard({ ...props }: BaseCardProps) {
@@ -17,7 +17,13 @@ export function BaseCard({ ...props }: BaseCardProps) {
   };
 
   return (
-    <Card className="w-full cursor-pointer hover:bg-gray-50 transition-colors">
+    <Card
+      className="w-full cursor-pointer hover:bg-gray-50 transition-colors"
+      onClick={(e) => {
+        e.preventDefault();
+        props.onSelected(props.patient, "select");
+      }}
+    >
       <CardHeader className="flex w-full justify-end flex-row">
         <div className="flex gap-2 justify-end items-center shrink-0">
           <IconButton
@@ -32,7 +38,10 @@ export function BaseCard({ ...props }: BaseCardProps) {
           <IconButton
             className=""
             disabled={deletePatient.isPending}
-            onClick={() => props.onSelected(props.patient)}
+            onClick={(e) => {
+              e.preventDefault();
+              props.onSelected(props.patient, "edit");
+            }}
           >
             <SquarePen />
           </IconButton>
