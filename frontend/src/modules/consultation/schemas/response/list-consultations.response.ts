@@ -1,6 +1,10 @@
 import z from "zod";
-import { ConsultationResponseSchema } from "./consultation.response";
+import { ConsultationListItemResponseSchema } from "./consultation-list-item.response";
 
-export const ListConsultationsResponseSchema = z.array(ConsultationResponseSchema);
+export const ListConsultationsResponseSchema = z.array(
+  ConsultationListItemResponseSchema,
+);
 
-export type ListConsultationsResponse = z.infer<typeof ListConsultationsResponseSchema>;
+export type ListConsultationsResponse = z.infer<
+  typeof ListConsultationsResponseSchema
+>;
