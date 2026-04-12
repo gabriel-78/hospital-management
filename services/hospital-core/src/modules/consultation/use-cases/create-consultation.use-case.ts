@@ -28,7 +28,7 @@ export class CreateConsultationUseCase {
   }
 
   private async validate(dto: CreateConsultationInput): Promise<Either<AppError, void>> {
-    if (dto.scheduledAt <= new Date()) {
+    if (new Date(dto.scheduledAt) <= new Date()) {
       return makeLeft(new AppError('DOMAIN_ERROR', 'CONSULTATION_SCHEDULED_AT_MUST_BE_FUTURE'));
     }
 
