@@ -1,10 +1,10 @@
 import { AppLayout } from "@/components/Layouts/AppLayout";
-import { ScheduleConsultations } from "./ScheduleConsultations";
+import { Patients } from "../modules/patient/pages/Patients";
 
 export function RootPage() {
   return (
     <AppLayout>
-      <ScheduleConsultations />
+      <Patients />
     </AppLayout>
   );
 }
