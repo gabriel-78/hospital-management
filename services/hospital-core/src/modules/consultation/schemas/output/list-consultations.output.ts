@@ -1,5 +1,11 @@
 import { z } from 'zod';
-import { consultationOutputSchema, ConsultationOutput } from './consultation.output.js';
+import { consultationOutputSchema } from './consultation.output.js';
 
-export const listConsultationsOutputSchema = z.array(consultationOutputSchema);
-export type ListConsultationsOutput = ConsultationOutput[];
+export const consultationListItemOutputSchema = consultationOutputSchema.extend({
+  doctorName: z.string(),
+});
+
+export const listConsultationsOutputSchema = z.array(consultationListItemOutputSchema);
+
+export type ConsultationListItemOutput = z.infer<typeof consultationListItemOutputSchema>;
+export type ListConsultationsOutput = ConsultationListItemOutput[];

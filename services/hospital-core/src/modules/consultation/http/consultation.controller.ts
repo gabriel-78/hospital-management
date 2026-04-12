@@ -11,6 +11,7 @@ import {
   RescheduleConsultationUseCase,
 } from '../use-cases/index.js';
 import { ConsultationPresenter } from './consultation.presenter.js';
+import { listConsultationsInputSchema } from '../schemas/index.js';
 
 export class ConsultationController {
   constructor(
@@ -36,7 +37,8 @@ export class ConsultationController {
   }
 
   async list(req: Request, res: Response) {
-    const result = await this.listUseCase.execute();
+    const filters = listConsultationsInputSchema.parse(req.query);
+    const result = await this.listUseCase.execute(filters);
     if (isLeft(result)) return failureRequest(res, result.left);
     return res.status(200).send(success(ConsultationPresenter.toListOutput(result.right)));
   }

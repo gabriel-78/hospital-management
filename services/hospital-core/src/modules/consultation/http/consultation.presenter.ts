@@ -1,4 +1,5 @@
 import { Consultation } from '../consultation.domain.js';
+import { ConsultationListItem } from '../infra/consultation.repository.js';
 import {
   CancelConsultationOutput,
   CompleteConsultationOutput,
@@ -36,8 +37,13 @@ export class ConsultationPresenter {
     return findConsultationByIdOutputSchema.parse(toPlain(consultation));
   }
 
-  static toListOutput(consultations: Consultation[]): ListConsultationsOutput {
-    return listConsultationsOutputSchema.parse(consultations.map(toPlain));
+  static toListOutput(items: ConsultationListItem[]): ListConsultationsOutput {
+    return listConsultationsOutputSchema.parse(
+      items.map(({ consultation, doctorName }) => ({
+        ...toPlain(consultation),
+        doctorName,
+      })),
+    );
   }
 
   static toCancelOutput(consultation: Consultation): CancelConsultationOutput {
