@@ -9,21 +9,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { ConsultationResponse } from "../schemas";
 import { Plus, SquarePen, Trash } from "lucide-react";
 import { useMemo, useState } from "react";
+import { format } from "date-fns";
+import type { ConsultationListItemResponse } from "../schemas";
+import { useListConsultations, useDeleteConsultation } from "../hooks";
 
 export function ScheduleConsultations() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [selectedConsultation, setSelectedConsultation] = useState<
-    ConsultationResponse | undefined
+    ConsultationListItemResponse | undefined
   >(undefined);
 
-  const onDeleteConsultation = async (id: string) => {
-    console.log("delete", id);
-  };
+  const consultationsQuery = useListConsultations({ status: ["SCHEDULED"] });
 
-  const consultations = useMemo(() => [], []);
+  const deleteConsultationMutation = useDeleteConsultation();
+
+  const consultations = useMemo(() => {
+    if (!consultationsQuery.data || !consultationsQuery.data.success) return [];
+    return consultationsQuery.data.data ?? [];
+  }, [consultationsQuery.data]);
 
   return (
     <div className="flex flex-col p-12 gap-8 w-full">
@@ -45,27 +50,15 @@ export function ScheduleConsultations() {
         </Button>
       </div>
 
-      <Table className="">
+      <Table>
         <TableHeader className="sticky bg-background top-0">
           <TableRow>
             <TableHead className="uppercase text-xs tracking-[0.0375rem] text-gray-500 font-medium text-left">
-              Descrição
+              Médico
             </TableHead>
 
             <TableHead className="uppercase text-xs tracking-[0.0375rem] text-gray-500 font-medium text-center">
               Data
-            </TableHead>
-
-            <TableHead className="uppercase text-xs tracking-[0.0375rem] text-gray-500 font-medium text-center">
-              Categoria
-            </TableHead>
-
-            <TableHead className="uppercase text-xs tracking-[0.0375rem] text-gray-500 font-medium text-center">
-              Tipo
-            </TableHead>
-
-            <TableHead className="uppercase text-xs tracking-[0.0375rem] text-gray-500 font-medium text-right">
-              Valor
             </TableHead>
 
             <TableHead className="uppercase text-xs tracking-[0.0375rem] text-gray-500 font-medium text-right">
@@ -75,37 +68,19 @@ export function ScheduleConsultations() {
         </TableHeader>
 
         <TableBody>
-          {consultations.map((consultation, idx) => (
-            <TableRow key={idx} className="p-0">
+          {consultations.map((consultation) => (
+            <TableRow key={consultation.id} className="p-0">
               <TableCell className="font-medium">
                 <div className="flex grow items-center justify-start gap-4">
                   <span className="text-base text-gray-800 font-medium">
-                    campo
+                    {consultation.doctorName}
                   </span>
                 </div>
               </TableCell>
 
               <TableCell className="text-center">
                 <span className="w-full text-sm text-gray-600 font-normal">
-                  campo
-                </span>
-              </TableCell>
-
-              <TableCell className="">
-                <span className="w-full text-sm text-gray-600 font-normal">
-                  campo
-                </span>
-              </TableCell>
-
-              <TableCell className="text-right">
-                <span className="w-full text-sm text-gray-600 font-normal">
-                  campo
-                </span>
-              </TableCell>
-
-              <TableCell className="text-right">
-                <span className="w-full text-sm text-gray-600 font-normal">
-                  campo
+                  {format(consultation.scheduledAt, "dd/MM/yyyy HH:mm")}
                 </span>
               </TableCell>
 
@@ -113,17 +88,17 @@ export function ScheduleConsultations() {
                 <div className="flex grow items-center justify-end gap-2">
                   <IconButton
                     variant={"destructive"}
-                    className=""
-                    onClick={() => onDeleteConsultation("<consultation-id>")}
-                    // disabled={loading}
+                    onClick={() =>
+                      deleteConsultationMutation.mutate(consultation.id)
+                    }
+                    disabled={deleteConsultationMutation.isPending}
                   >
                     <Trash />
                   </IconButton>
 
                   <IconButton
-                    className=""
-                    // disabled={loading}
-                    onClick={() => setSelectedConsultation(undefined)}
+                    onClick={() => setSelectedConsultation(consultation)}
+                    disabled={deleteConsultationMutation.isPending}
                   >
                     <SquarePen />
                   </IconButton>
