@@ -13,7 +13,7 @@ import { Plus, SquarePen, Trash } from "lucide-react";
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import type { ConsultationListItemResponse } from "../schemas";
-import { useListConsultations, useDeleteConsultation } from "../hooks";
+import { useListConsultations, useCancelConsultation } from "../hooks";
 
 export function ScheduleConsultations() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -23,7 +23,7 @@ export function ScheduleConsultations() {
 
   const consultationsQuery = useListConsultations({ status: ["SCHEDULED"] });
 
-  const deleteConsultationMutation = useDeleteConsultation();
+  const cancelConsultationMutation = useCancelConsultation();
 
   const consultations = useMemo(() => {
     if (!consultationsQuery.data || !consultationsQuery.data.success) return [];
@@ -89,16 +89,16 @@ export function ScheduleConsultations() {
                   <IconButton
                     variant={"destructive"}
                     onClick={() =>
-                      deleteConsultationMutation.mutate(consultation.id)
+                      cancelConsultationMutation.mutate(consultation.id)
                     }
-                    disabled={deleteConsultationMutation.isPending}
+                    disabled={cancelConsultationMutation.isPending}
                   >
                     <Trash />
                   </IconButton>
 
                   <IconButton
                     onClick={() => setSelectedConsultation(consultation)}
-                    disabled={deleteConsultationMutation.isPending}
+                    disabled={cancelConsultationMutation.isPending}
                   >
                     <SquarePen />
                   </IconButton>
