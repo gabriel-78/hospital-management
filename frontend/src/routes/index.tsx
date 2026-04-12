@@ -10,7 +10,7 @@ function RoutesComponent() {
         <Route path="/" element={<RootPage />} />
 
         <Route element={<AppLayout />}>
-          <Route path="/transactions" element={<ScheduleConsultations />} />
+          <Route path="/consultations" element={<ScheduleConsultations />} />
         </Route>
       </Routes>
     </Router>
