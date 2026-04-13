@@ -5,6 +5,7 @@ import { AppLayout } from "@/components/Layouts/AppLayout";
 import { PatientLayout } from "@/components/Layouts/PatientLayout";
 import { Doctors } from "@/modules/doctor/pages/Doctors";
 import { ScheduleConsultations } from "@/modules/consultation/pages/ScheduleConsultations";
+import { DoctorLayout } from "@/components/Layouts/DoctorLayout";
 
 export function RootPage() {
   const session = useSessionStore((state) => state);
@@ -17,9 +18,9 @@ export function RootPage() {
     );
   } else if (session.session === "doctor" && session.doctor) {
     return (
-      <AppLayout>
-        <p>Em breve...</p>
-      </AppLayout>
+      <DoctorLayout>
+        <ScheduleConsultations />
+      </DoctorLayout>
     );
   } else {
     return (
