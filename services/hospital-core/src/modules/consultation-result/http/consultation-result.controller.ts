@@ -14,6 +14,7 @@ export class ConsultationResultController {
   ) {}
 
   async create(req: Request, res: Response) {
+    console.log('oi');
     const result = await this.createUseCase.execute(req.body);
     if (isLeft(result)) return failureRequest(res, result.left);
     return res.status(201).send(success(ConsultationResultPresenter.toCreateOutput(result.right)));

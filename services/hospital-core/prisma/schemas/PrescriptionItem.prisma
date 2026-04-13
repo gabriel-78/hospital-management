@@ -1,6 +1,7 @@
 model PrescriptionItem {
   id             String  @id @default(uuid())
   prescriptionId String
+  remedyId       String?
   medication     String
   dosage         String
   duration       String

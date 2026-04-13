@@ -11,6 +11,7 @@ import {
 
 export interface PrescriptionItemProps extends EntityProps {
   prescriptionId: string;
+  remedyId?: string | null;
   medication: string;
   dosage: string;
   duration: string;
@@ -20,6 +21,7 @@ export interface PrescriptionItemProps extends EntityProps {
 export interface PrescriptionItemPersistenceRaw {
   id: string;
   prescriptionId: string;
+  remedyId?: string | null;
   medication: string;
   dosage: string;
   duration: string;
@@ -47,6 +49,10 @@ export class PrescriptionItem extends Entity<PrescriptionItem, PrescriptionItemP
     return this.props.duration;
   }
 
+  get remedyId(): string | null {
+    return this.props.remedyId ?? null;
+  }
+
   get instructions(): string | null {
     return this.props.instructions ?? null;
   }
@@ -64,6 +70,7 @@ export class PrescriptionItem extends Entity<PrescriptionItem, PrescriptionItemP
     return PrescriptionItem.tryCreate({
       id: idResult.right,
       prescriptionId: raw.prescriptionId,
+      remedyId: raw.remedyId ?? null,
       medication: raw.medication,
       dosage: raw.dosage,
       duration: raw.duration,

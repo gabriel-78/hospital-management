@@ -64,6 +64,7 @@ export class CreateConsultationResultUseCase {
       for (const itemDto of dto.prescription.items) {
         const itemEntity = PrescriptionItem.tryCreate({
           prescriptionId: prescriptionEntity.right.id.value,
+          remedyId: itemDto.remedyId ?? null,
           medication: itemDto.medication,
           dosage: itemDto.dosage,
           duration: itemDto.duration,

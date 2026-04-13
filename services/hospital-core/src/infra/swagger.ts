@@ -811,6 +811,12 @@ const swaggerDocument = {
         properties: {
           id: { type: 'string', format: 'uuid' },
           prescriptionId: { type: 'string', format: 'uuid' },
+          remedyId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true,
+            description: 'External ID from the pharmacological ERP. Null if not provided.',
+          },
           medication: { type: 'string', example: 'Amoxicilina 500mg' },
           dosage: { type: 'string', example: '1 comprimido' },
           duration: { type: 'string', example: '7 dias' },
@@ -872,6 +878,11 @@ const swaggerDocument = {
                   type: 'object',
                   required: ['medication', 'dosage', 'duration'],
                   properties: {
+                    remedyId: {
+                      type: 'string',
+                      format: 'uuid',
+                      description: 'Optional external ID from the pharmacological ERP.',
+                    },
                     medication: { type: 'string', minLength: 1, example: 'Amoxicilina 500mg' },
                     dosage: { type: 'string', minLength: 1, example: '1 comprimido' },
                     duration: { type: 'string', minLength: 1, example: '7 dias' },

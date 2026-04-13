@@ -16,6 +16,7 @@ import {
 const toPrescriptionItemPlain = (item: PrescriptionItem): PrescriptionItemOutput => ({
   id: item.id.value,
   prescriptionId: item.prescriptionId,
+  remedyId: item.remedyId,
   medication: item.medication,
   dosage: item.dosage,
   duration: item.duration,
