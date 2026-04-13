@@ -9,18 +9,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, SquarePen, Trash } from "lucide-react";
+import { ClipboardList, Plus, SquarePen, Trash } from "lucide-react";
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import type { ConsultationListItemResponse } from "../schemas";
 import { useListConsultations, useCancelConsultation } from "../hooks";
 import { useSessionStore } from "@/stores";
+import { CreateConsultationResultDialog } from "@/modules/consultation-result/components/Dialogs/Create";
 
 export function ScheduleConsultations() {
   const session = useSessionStore((state) => state.session);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [selectedConsultation, setSelectedConsultation] = useState<
     ConsultationListItemResponse | undefined
+  >(undefined);
+  const [resultConsultationId, setResultConsultationId] = useState<
+    string | undefined
   >(undefined);
 
   const consultationsQuery = useListConsultations({ status: ["SCHEDULED"] });
@@ -92,22 +96,34 @@ export function ScheduleConsultations() {
 
               <TableCell className="text-right">
                 <div className="flex grow items-center justify-end gap-2">
-                  <IconButton
-                    variant={"destructive"}
-                    onClick={() =>
-                      cancelConsultationMutation.mutate(consultation.id)
-                    }
-                    disabled={cancelConsultationMutation.isPending}
-                  >
-                    <Trash />
-                  </IconButton>
+                  {session === "doctor" ? (
+                    <IconButton
+                      onClick={() =>
+                        setResultConsultationId(consultation.id)
+                      }
+                    >
+                      <ClipboardList />
+                    </IconButton>
+                  ) : (
+                    <>
+                      <IconButton
+                        variant="destructive"
+                        onClick={() =>
+                          cancelConsultationMutation.mutate(consultation.id)
+                        }
+                        disabled={cancelConsultationMutation.isPending}
+                      >
+                        <Trash />
+                      </IconButton>
 
-                  <IconButton
-                    onClick={() => setSelectedConsultation(consultation)}
-                    disabled={cancelConsultationMutation.isPending}
-                  >
-                    <SquarePen />
-                  </IconButton>
+                      <IconButton
+                        onClick={() => setSelectedConsultation(consultation)}
+                        disabled={cancelConsultationMutation.isPending}
+                      >
+                        <SquarePen />
+                      </IconButton>
+                    </>
+                  )}
                 </div>
               </TableCell>
             </TableRow>
@@ -123,6 +139,16 @@ export function ScheduleConsultations() {
         }}
         consultation={selectedConsultation}
       />
+
+      {resultConsultationId && (
+        <CreateConsultationResultDialog
+          open={!!resultConsultationId}
+          onOpenChange={(value) => {
+            if (!value) setResultConsultationId(undefined);
+          }}
+          consultationId={resultConsultationId}
+        />
+      )}
     </div>
   );
 }
