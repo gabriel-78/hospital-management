@@ -8,6 +8,7 @@ import {
 
 export interface ListConsultationsFilters {
   patientId?: string;
+  doctorId?: string;
   status?: string[];
 }
 
@@ -20,6 +21,7 @@ export async function getListConsultations(filters?: ListConsultationsFilters) {
         paramsSerializer: (params) => {
           const search = new URLSearchParams();
           if (params.patientId) search.append("patientId", params.patientId);
+          if (params.doctorId) search.append("doctorId", params.doctorId);
           params.status?.forEach((s: string) => search.append("status", s));
           return search.toString();
         },

@@ -3,6 +3,7 @@ import { consultationOutputSchema } from './consultation.output.js';
 
 export const consultationListItemOutputSchema = consultationOutputSchema.extend({
   doctorName: z.string(),
+  patientName: z.string(),
 });
 
 export const listConsultationsOutputSchema = z.array(consultationListItemOutputSchema);

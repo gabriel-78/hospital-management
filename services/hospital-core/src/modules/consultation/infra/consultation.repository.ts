@@ -3,12 +3,14 @@ import { Consultation, ConsultationStatusEnum } from '../consultation.domain.js'
 
 export interface ListConsultationsFilters {
   patientId?: string;
+  doctorId?: string;
   status?: ConsultationStatusEnum[];
 }
 
 export interface ConsultationListItem {
   consultation: Consultation;
   doctorName: string;
+  patientName: string;
 }
 
 export interface IConsultationRepository {
