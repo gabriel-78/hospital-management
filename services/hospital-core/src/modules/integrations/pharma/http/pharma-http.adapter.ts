@@ -1,7 +1,8 @@
 import { AppError, Either, isLeft, makeLeft, makeRight } from '@shared/core';
+
 import { IPharmaGateway } from './pharma.gateway.js';
-import { PharmaClient } from './pharma.client.js';
 import { PharmaListProductsFilters, PharmaProduct, PharmaProductRaw } from './pharma.types.js';
+import { PharmaClient } from './pharma.client.js';
 
 export class PharmaHttpAdapter implements IPharmaGateway {
   constructor(private readonly client: PharmaClient) {}
