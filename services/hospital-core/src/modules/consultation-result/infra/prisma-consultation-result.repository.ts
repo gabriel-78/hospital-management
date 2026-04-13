@@ -30,10 +30,11 @@ export class PrismaConsultationResultRepository implements IConsultationResultRe
                   items: {
                     create: data.prescription.items.map((item) => ({
                       id: item.id.value,
+                      ...(item.remedyId ? { remedyId: item.remedyId } : {}),
                       medication: item.medication,
                       dosage: item.dosage,
                       duration: item.duration,
-                      instructions: item.instructions,
+                      ...(item.instructions ? { instructions: item.instructions } : {}),
                     })),
                   },
                 },

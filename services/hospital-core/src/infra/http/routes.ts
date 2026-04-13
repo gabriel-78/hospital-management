@@ -1,4 +1,5 @@
 import { companyRouter } from '@/modules/company/http/company.routes.js';
+import { consultationResultRouter } from '@/modules/consultation-result/http/consultation-result.routes.js';
 import { consultationRouter } from '@/modules/consultation/http/consultation.routes.js';
 import { doctorRouter } from '@/modules/doctor/http/doctor.routes.js';
 import { healthRouter } from '@/modules/health/health.routes.js';
@@ -12,5 +13,6 @@ router.use('/companies', companyRouter);
 router.use('/doctors', doctorRouter);
 router.use('/patients', patientRouter);
 router.use('/consultations', consultationRouter);
+router.use('/consultation-results', consultationResultRouter);
 
 export { router };

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 const prescriptionItemInputSchema = z.object({
+  remedyId: z.string().uuid().optional(),
   medication: z.string().min(1),
   dosage: z.string().min(1),
   duration: z.string().min(1),

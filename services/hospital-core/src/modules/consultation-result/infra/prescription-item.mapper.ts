@@ -7,6 +7,7 @@ export class PrescriptionItemMapper {
     return PrescriptionItem.fromPersistence({
       id: raw.id,
       prescriptionId: raw.prescriptionId,
+      remedyId: raw.remedyId,
       medication: raw.medication,
       dosage: raw.dosage,
       duration: raw.duration,
@@ -17,6 +18,7 @@ export class PrescriptionItemMapper {
   static toPersistence(item: PrescriptionItem) {
     return {
       id: item.id.value,
+      remedyId: item.remedyId,
       medication: item.medication,
       dosage: item.dosage,
       duration: item.duration,
