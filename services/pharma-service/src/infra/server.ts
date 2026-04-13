@@ -9,16 +9,16 @@ const app = express();
 
 app.use(express.json());
 
+app.use(
+  cors({
+    origin: '*',
+    // credentials: true,
+  }),
+);
+
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(router);
-
-app.use(
-  cors({
-    origin: env.FRONT_END_URL,
-    credentials: true,
-  }),
-);
 
 async function bootstrap() {
   app.listen({ port: env.PORT }, () => {
