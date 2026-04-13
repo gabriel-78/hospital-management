@@ -83,11 +83,15 @@ export class PrismaConsultationRepository implements IConsultationRepository {
       where: {
         deletedAt: null,
         ...(filters?.patientId ? { patientId: filters.patientId } : {}),
+        ...(filters?.doctorId ? { doctorId: filters.doctorId } : {}),
         ...(filters?.status?.length
           ? { status: { in: filters.status as ConsultationStatus[] } }
           : {}),
       },
-      include: { doctor: { select: { name: true } } },
+      include: {
+        doctor: { select: { name: true } },
+        patient: { select: { name: true } },
+      },
     });
 
     const results: ConsultationListItem[] = [];
@@ -95,7 +99,11 @@ export class PrismaConsultationRepository implements IConsultationRepository {
     for (const raw of rows) {
       const result = ConsultationMapper.toDomain(raw);
       if (isLeft(result)) return makeLeft(result.left);
-      results.push({ consultation: result.right, doctorName: raw.doctor.name });
+      results.push({
+        consultation: result.right,
+        doctorName: raw.doctor.name,
+        patientName: raw.patient.name,
+      });
     }
 
     return makeRight(results);

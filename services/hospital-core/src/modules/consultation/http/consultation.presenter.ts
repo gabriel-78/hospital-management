@@ -39,9 +39,10 @@ export class ConsultationPresenter {
 
   static toListOutput(items: ConsultationListItem[]): ListConsultationsOutput {
     return listConsultationsOutputSchema.parse(
-      items.map(({ consultation, doctorName }) => ({
+      items.map(({ consultation, doctorName, patientName }) => ({
         ...toPlain(consultation),
         doctorName,
+        patientName,
       })),
     );
   }

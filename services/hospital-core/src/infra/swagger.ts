@@ -97,6 +97,13 @@ const swaggerDocument = {
             description: 'Filter consultations by patient ID.',
           },
           {
+            name: 'doctorId',
+            in: 'query',
+            required: false,
+            schema: { type: 'string', format: 'uuid' },
+            description: 'Filter consultations by doctor ID.',
+          },
+          {
             name: 'status',
             in: 'query',
             required: false,
@@ -646,9 +653,10 @@ const swaggerDocument = {
           { $ref: '#/components/schemas/Consultation' },
           {
             type: 'object',
-            required: ['doctorName'],
+            required: ['doctorName', 'patientName'],
             properties: {
               doctorName: { type: 'string', example: 'Ana Paula Ferreira' },
+              patientName: { type: 'string', example: 'João Pedro Alves' },
             },
           },
         ],
