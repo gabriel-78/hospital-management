@@ -1,0 +1,10 @@
+model PrescriptionItem {
+  id             String  @id @default(uuid())
+  prescriptionId String
+  medication     String
+  dosage         String
+  duration       String
+  instructions   String?
+
+  prescription Prescription @relation(fields: [prescriptionId], references: [id])
+}
