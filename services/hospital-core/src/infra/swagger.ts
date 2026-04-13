@@ -530,6 +530,77 @@ const swaggerDocument = {
         },
       },
     },
+    '/consultation-results': {
+      post: {
+        tags: ['Consultation Results'],
+        summary: 'Create a consultation result',
+        description:
+          'Creates a result for a completed consultation. Only the doctor assigned to the consultation can submit the result. A consultation can only have one result. Optionally includes a prescription with one or more items.',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/CreateConsultationResultInput' },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: 'Created',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: { $ref: '#/components/schemas/ConsultationResult' },
+                  },
+                },
+              },
+            },
+          },
+          400: { $ref: '#/components/responses/DomainError' },
+          403: { $ref: '#/components/responses/Forbidden' },
+          404: { $ref: '#/components/responses/NotFound' },
+          422: { $ref: '#/components/responses/ValidationError' },
+        },
+      },
+    },
+    '/consultation-results/{consultationId}': {
+      get: {
+        tags: ['Consultation Results'],
+        summary: 'Find consultation result by consultation ID',
+        description:
+          'Returns the result of a consultation, including the prescription and its items if one was registered.',
+        parameters: [
+          {
+            name: 'consultationId',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', format: 'uuid' },
+            description: 'The ID of the consultation.',
+          },
+        ],
+        responses: {
+          200: {
+            description: 'OK',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    isSuccess: { type: 'boolean', example: true },
+                    data: { $ref: '#/components/schemas/ConsultationResult' },
+                  },
+                },
+              },
+            },
+          },
+          404: { $ref: '#/components/responses/NotFound' },
+          422: { $ref: '#/components/responses/ValidationError' },
+        },
+      },
+    },
     '/companies/{id}': {
       get: {
         tags: ['Companies'],
@@ -735,6 +806,83 @@ const swaggerDocument = {
           crm: { type: 'string', pattern: '^\\d{4,6}-[A-Za-z]{2}$', example: '654321-RJ' },
         },
       },
+      PrescriptionItem: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          prescriptionId: { type: 'string', format: 'uuid' },
+          medication: { type: 'string', example: 'Amoxicilina 500mg' },
+          dosage: { type: 'string', example: '1 comprimido' },
+          duration: { type: 'string', example: '7 dias' },
+          instructions: { type: 'string', nullable: true, example: 'Tomar após as refeições' },
+        },
+      },
+      Prescription: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          consultationResultId: { type: 'string', format: 'uuid' },
+          createdAt: { type: 'string', format: 'date-time' },
+          deletedAt: { type: 'string', format: 'date-time', nullable: true },
+          items: {
+            type: 'array',
+            items: { $ref: '#/components/schemas/PrescriptionItem' },
+          },
+        },
+      },
+      ConsultationResult: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          consultationId: { type: 'string', format: 'uuid' },
+          description: { type: 'string', example: 'Paciente apresentou melhora significativa.' },
+          createdAt: { type: 'string', format: 'date-time' },
+          deletedAt: { type: 'string', format: 'date-time', nullable: true },
+          prescription: {
+            nullable: true,
+            allOf: [{ $ref: '#/components/schemas/Prescription' }],
+          },
+        },
+      },
+      CreateConsultationResultInput: {
+        type: 'object',
+        required: ['consultationId', 'doctorId', 'description'],
+        properties: {
+          id: {
+            type: 'string',
+            format: 'uuid',
+            description:
+              'Optional external ID provided by the pharmacological ERP. If omitted, a UUID is auto-generated.',
+          },
+          consultationId: { type: 'string', format: 'uuid' },
+          doctorId: { type: 'string', format: 'uuid' },
+          description: {
+            type: 'string',
+            minLength: 1,
+            example: 'Paciente apresentou melhora significativa.',
+          },
+          prescription: {
+            type: 'object',
+            required: ['items'],
+            properties: {
+              items: {
+                type: 'array',
+                minItems: 1,
+                items: {
+                  type: 'object',
+                  required: ['medication', 'dosage', 'duration'],
+                  properties: {
+                    medication: { type: 'string', minLength: 1, example: 'Amoxicilina 500mg' },
+                    dosage: { type: 'string', minLength: 1, example: '1 comprimido' },
+                    duration: { type: 'string', minLength: 1, example: '7 dias' },
+                    instructions: { type: 'string', example: 'Tomar após as refeições' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       CreateCompanyInput: {
         type: 'object',
         required: ['name', 'cnpj', 'type', 'address'],
@@ -777,6 +925,23 @@ const swaggerDocument = {
               properties: {
                 isSuccess: { type: 'boolean', example: false },
                 error: { type: 'string', example: 'CNPJ_ALREADY_EXISTS' },
+              },
+            },
+          },
+        },
+      },
+      Forbidden: {
+        description: 'Forbidden',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                isSuccess: { type: 'boolean', example: false },
+                error: {
+                  type: 'string',
+                  example: 'DOCTOR_NOT_AUTHORIZED_FOR_THIS_CONSULTATION',
+                },
               },
             },
           },
