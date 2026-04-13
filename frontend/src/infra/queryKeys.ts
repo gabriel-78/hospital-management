@@ -25,4 +25,9 @@ export const queryKeys = {
       complete:   (id?: string) => [queryKeys.consultations.list()],
     },
   },
+  consultationResults: {
+    invalidations: {
+      create: (_id?: string) => [queryKeys.consultations.list()],
+    },
+  },
 };
