@@ -18,7 +18,13 @@ export function validate(schemas: ValidateSchemas) {
         req.params = schemas.params.parse(req.params) as Record<string, string>;
       }
       if (schemas.query) {
-        req.query = schemas.query.parse(req.query) as Record<string, string | string[]>;
+        const parsedQuery = schemas.query.parse(req.query) as Record<string, string | string[]>;
+        Object.defineProperty(req, 'query', {
+          value: parsedQuery,
+          writable: true,
+          configurable: true,
+          enumerable: true,
+        });
       }
       next();
     } catch (err) {

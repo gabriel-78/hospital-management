@@ -33,7 +33,38 @@ const swaggerDocument = {
       get: {
         tags: ['Products'],
         summary: 'Listar produtos',
-        description: 'Retorna todos os produtos ativos (não deletados)',
+        description:
+          'Retorna todos os produtos ativos (não deletados). ' +
+          'Aceita filtros opcionais por IDs, nomes e princípios ativos — os filtros são combinados com lógica OR.',
+        parameters: [
+          {
+            name: 'ids',
+            in: 'query',
+            required: false,
+            description: 'Lista de UUIDs de produtos a filtrar',
+            schema: { type: 'array', items: { type: 'string', format: 'uuid' } },
+            style: 'form',
+            explode: true,
+          },
+          {
+            name: 'names',
+            in: 'query',
+            required: false,
+            description: 'Lista de nomes de produtos a filtrar',
+            schema: { type: 'array', items: { type: 'string' } },
+            style: 'form',
+            explode: true,
+          },
+          {
+            name: 'activeIngredients',
+            in: 'query',
+            required: false,
+            description: 'Lista de nomes de princípios ativos a filtrar',
+            schema: { type: 'array', items: { type: 'string' } },
+            style: 'form',
+            explode: true,
+          },
+        ],
         responses: {
           200: {
             description: 'OK',
@@ -49,6 +80,7 @@ const swaggerDocument = {
               },
             },
           },
+          422: { $ref: '#/components/responses/ValidationError' },
         },
       },
       post: {

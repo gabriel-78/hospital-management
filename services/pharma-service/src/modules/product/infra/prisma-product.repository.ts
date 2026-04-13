@@ -1,7 +1,8 @@
+import { Prisma } from '@prisma/client';
 import { AppError, Either, isLeft, makeLeft, makeRight } from '@shared/core';
 import { prisma } from '@/infra/database/prisma.js';
 import { Product } from '../domain/index.js';
-import { IProductRepository } from './product.repository.js';
+import { IProductRepository, ProductListFilters } from './product.repository.js';
 import { ProductMapper } from './product.mapper.js';
 
 export class PrismaProductRepository implements IProductRepository {
@@ -42,9 +43,24 @@ export class PrismaProductRepository implements IProductRepository {
     return makeRight(result.right);
   }
 
-  async list(): Promise<Either<AppError, Product[]>> {
+  async list(filters?: ProductListFilters): Promise<Either<AppError, Product[]>> {
+    const orConditions: Prisma.ProductWhereInput[] = [];
+
+    if (filters?.ids?.length) {
+      orConditions.push({ id: { in: filters.ids } });
+    }
+    if (filters?.names?.length) {
+      orConditions.push({ name: { in: filters.names, mode: 'insensitive' } });
+    }
+    if (filters?.activeIngredients?.length) {
+      orConditions.push({ activeIngredient: { in: filters.activeIngredients, mode: 'insensitive' } });
+    }
+
     const rows = await prisma.product.findMany({
-      where: { deletedAt: null },
+      where: {
+        deletedAt: null,
+        ...(orConditions.length > 0 ? { OR: orConditions } : {}),
+      },
     });
 
     const products: Product[] = [];
