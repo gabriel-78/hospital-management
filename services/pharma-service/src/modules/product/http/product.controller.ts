@@ -9,6 +9,7 @@ import {
   ListProductsUseCase,
 } from '../use-cases/index.js';
 import { ProductPresenter } from './product.presenter.js';
+import { ListProductsInput } from '../schemas/index.js';
 
 export class ProductController {
   constructor(
@@ -32,7 +33,8 @@ export class ProductController {
   }
 
   async list(req: Request, res: Response) {
-    const result = await this.listUseCase.execute();
+    const { ids, names, activeIngredients } = req.query as ListProductsInput;
+    const result = await this.listUseCase.execute({ ids, names, activeIngredients });
     if (isLeft(result)) return failureRequest(res, result.left);
     return res.status(200).send(success(ProductPresenter.toListOutput(result.right)));
   }

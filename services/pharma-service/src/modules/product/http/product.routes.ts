@@ -14,6 +14,7 @@ import {
   updateProductInputSchema,
   findProductByIdInputSchema,
   deleteProductInputSchema,
+  listProductsInputSchema,
 } from '../schemas/index.js';
 
 const productRouter = Router();
@@ -30,7 +31,9 @@ const controller = new ProductController(
 productRouter.post('/', validate({ body: createProductInputSchema }), (req, res) =>
   controller.create(req, res),
 );
-productRouter.get('/', (req, res) => controller.list(req, res));
+productRouter.get('/', validate({ query: listProductsInputSchema }), (req, res) =>
+  controller.list(req, res),
+);
 productRouter.get('/:id', validate({ params: findProductByIdInputSchema }), (req, res) =>
   controller.findById(req, res),
 );
