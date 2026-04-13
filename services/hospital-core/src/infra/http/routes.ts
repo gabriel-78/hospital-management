@@ -4,6 +4,7 @@ import { consultationRouter } from '@/modules/consultation/http/consultation.rou
 import { doctorRouter } from '@/modules/doctor/http/doctor.routes.js';
 import { healthRouter } from '@/modules/health/health.routes.js';
 import { patientRouter } from '@/modules/patient/http/patient.routes.js';
+import { pharmaRouter } from '@/modules/integrations/pharma/http/pharma.routes.js';
 import { Router } from 'express';
 
 const router = Router();
@@ -14,5 +15,6 @@ router.use('/doctors', doctorRouter);
 router.use('/patients', patientRouter);
 router.use('/consultations', consultationRouter);
 router.use('/consultation-results', consultationResultRouter);
+router.use('/integrations/pharma', pharmaRouter);
 
 export { router };

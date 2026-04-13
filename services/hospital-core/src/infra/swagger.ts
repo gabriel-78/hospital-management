@@ -601,6 +601,68 @@ const swaggerDocument = {
         },
       },
     },
+    '/integrations/pharma/products': {
+      get: {
+        tags: ['Integrations - Pharma'],
+        summary: 'Listar produtos do pharma-service',
+        description:
+          'Consulta produtos no pharma-service via integração HTTP. ' +
+          'Todos os filtros são opcionais e combinados com lógica OR — ' +
+          'um produto é retornado se atender a qualquer um dos critérios informados. ' +
+          'Sem filtros, retorna todos os produtos ativos.',
+        parameters: [
+          {
+            name: 'ids',
+            in: 'query',
+            required: false,
+            description: 'Lista de UUIDs de produtos a filtrar',
+            schema: { type: 'array', items: { type: 'string', format: 'uuid' } },
+            style: 'form',
+            explode: true,
+          },
+          {
+            name: 'names',
+            in: 'query',
+            required: false,
+            description: 'Lista de nomes de produtos a filtrar (case-insensitive)',
+            schema: { type: 'array', items: { type: 'string' } },
+            style: 'form',
+            explode: true,
+          },
+          {
+            name: 'activeIngredients',
+            in: 'query',
+            required: false,
+            description: 'Lista de princípios ativos a filtrar (case-insensitive)',
+            schema: { type: 'array', items: { type: 'string' } },
+            style: 'form',
+            explode: true,
+          },
+        ],
+        responses: {
+          200: {
+            description: 'OK',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean', example: true },
+                    data: {
+                      type: 'array',
+                      items: { $ref: '#/components/schemas/PharmaProduct' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          422: { $ref: '#/components/responses/ValidationError' },
+          502: { $ref: '#/components/responses/IntegrationError' },
+          503: { $ref: '#/components/responses/IntegrationUnavailable' },
+        },
+      },
+    },
     '/companies/{id}': {
       get: {
         tags: ['Companies'],
@@ -894,6 +956,18 @@ const swaggerDocument = {
           },
         },
       },
+      PharmaProduct: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          name: { type: 'string', example: 'AMOXICILINA' },
+          category: { type: 'string', example: 'ANTIBIOTICOS' },
+          activeIngredient: { type: 'string', example: 'AMOXICILINA' },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+          deletedAt: { type: 'string', format: 'date-time', nullable: true },
+        },
+      },
       CreateCompanyInput: {
         type: 'object',
         required: ['name', 'cnpj', 'type', 'address'],
@@ -967,6 +1041,38 @@ const swaggerDocument = {
               properties: {
                 isSuccess: { type: 'boolean', example: false },
                 error: { type: 'string', example: 'ADDRESS_STATE_INVALID' },
+              },
+            },
+          },
+        },
+      },
+      IntegrationError: {
+        description:
+          'Bad Gateway — o pharma-service respondeu com erro (ex: HTTP 5xx ou resposta inesperada)',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                success: { type: 'boolean', example: false },
+                error: { type: 'string', example: 'PHARMA_SERVICE_ERROR' },
+                code: { type: 'string', example: 'INTEGRATION_ERROR' },
+              },
+            },
+          },
+        },
+      },
+      IntegrationUnavailable: {
+        description:
+          'Service Unavailable — não foi possível conectar ao pharma-service (ex: ECONNREFUSED, timeout)',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                success: { type: 'boolean', example: false },
+                error: { type: 'string', example: 'PHARMA_SERVICE_UNAVAILABLE' },
+                code: { type: 'string', example: 'INTEGRATION_UNAVAILABLE' },
               },
             },
           },
