@@ -22,3 +22,9 @@ export interface PharmaApiResponse<T> {
   success: boolean;
   data: T;
 }
+
+export interface PharmaListProductsFilters {
+  ids?: string[];
+  names?: string[];
+  activeIngredients?: string[];
+}
