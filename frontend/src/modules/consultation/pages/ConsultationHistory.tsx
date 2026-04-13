@@ -10,8 +10,11 @@ import { useMemo } from "react";
 import { compareDesc, format } from "date-fns";
 import type { ConsultationListItemResponse } from "../schemas";
 import { useListConsultations } from "../hooks";
+import { useSessionStore } from "@/stores";
 
 export function ConsultationHistory() {
+  const session = useSessionStore((state) => state.session);
+
   const consultationsQuery = useListConsultations({
     status: ["CANCELLED", "COMPLETED"],
   });
@@ -42,7 +45,7 @@ export function ConsultationHistory() {
         <TableHeader className="sticky bg-background top-0">
           <TableRow>
             <TableHead className="uppercase text-xs tracking-[0.0375rem] text-gray-500 font-medium text-left">
-              Médico
+              {session === "doctor" ? "Paciente" : "Médico"}
             </TableHead>
 
             <TableHead className="uppercase text-xs tracking-[0.0375rem] text-gray-500 font-medium text-center">
@@ -61,7 +64,9 @@ export function ConsultationHistory() {
               <TableCell className="font-medium">
                 <div className="flex grow items-center justify-start gap-4">
                   <span className="text-base text-gray-800 font-medium">
-                    {consultation.doctorName}
+                    {session === "doctor"
+                      ? consultation.patientName
+                      : consultation.doctorName}
                   </span>
                 </div>
               </TableCell>

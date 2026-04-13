@@ -1,4 +1,4 @@
-import { AppLayout } from "@/components/Layouts/AppLayout";
+import { DoctorLayout } from "@/components/Layouts/DoctorLayout";
 import { PatientLayout } from "@/components/Layouts/PatientLayout";
 import { RootPage } from "@/pages/RootPage";
 import { ScheduleConsultations } from "@/modules/consultation/pages/ScheduleConsultations";
@@ -16,7 +16,7 @@ function RoutesComponent() {
 
         <Route
           element={
-            session.session === "doctor" ? <AppLayout /> : <PatientLayout />
+            session.session === "doctor" ? <DoctorLayout /> : <PatientLayout />
           }
         >
           <Route path="/consultations" element={<ScheduleConsultations />} />

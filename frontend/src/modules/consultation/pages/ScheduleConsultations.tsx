@@ -14,8 +14,10 @@ import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import type { ConsultationListItemResponse } from "../schemas";
 import { useListConsultations, useCancelConsultation } from "../hooks";
+import { useSessionStore } from "@/stores";
 
 export function ScheduleConsultations() {
+  const session = useSessionStore((state) => state.session);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [selectedConsultation, setSelectedConsultation] = useState<
     ConsultationListItemResponse | undefined
@@ -44,17 +46,19 @@ export function ScheduleConsultations() {
           </span>
         </div>
 
-        <Button type="button" onClick={() => setOpenDialog(true)}>
-          <Plus />
-          Nova consulta
-        </Button>
+        {session === "patient" && (
+          <Button type="button" onClick={() => setOpenDialog(true)}>
+            <Plus />
+            Nova consulta
+          </Button>
+        )}
       </div>
 
       <Table>
         <TableHeader className="sticky bg-background top-0">
           <TableRow>
             <TableHead className="uppercase text-xs tracking-[0.0375rem] text-gray-500 font-medium text-left">
-              Médico
+              {session === "doctor" ? "Paciente" : "Médico"}
             </TableHead>
 
             <TableHead className="uppercase text-xs tracking-[0.0375rem] text-gray-500 font-medium text-center">
@@ -73,7 +77,9 @@ export function ScheduleConsultations() {
               <TableCell className="font-medium">
                 <div className="flex grow items-center justify-start gap-4">
                   <span className="text-base text-gray-800 font-medium">
-                    {consultation.doctorName}
+                    {session === "doctor"
+                      ? consultation.patientName
+                      : consultation.doctorName}
                   </span>
                 </div>
               </TableCell>
