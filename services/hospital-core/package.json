@@ -22,7 +22,8 @@
     "zod": "^4.3.6",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "@shared/core": "file:../../packages"
+    "@shared/core": "file:../../packages",
+    "axios": "^1.7.9"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
