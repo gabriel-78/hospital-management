@@ -14,8 +14,9 @@ model Consultation {
   updatedAt   DateTime           @updatedAt
   deletedAt   DateTime?
 
-  doctor  Doctor  @relation(fields: [doctorId], references: [id])
-  patient Patient @relation(fields: [patientId], references: [id])
+  doctor             Doctor              @relation(fields: [doctorId], references: [id])
+  patient            Patient             @relation(fields: [patientId], references: [id])
+  consultationResult ConsultationResult?
 
   @@index([doctorId, scheduledAt])
   @@index([patientId, scheduledAt])

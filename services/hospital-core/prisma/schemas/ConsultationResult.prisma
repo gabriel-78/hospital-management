@@ -1,0 +1,10 @@
+model ConsultationResult {
+  id             String    @id @default(uuid())
+  consultationId String    @unique
+  description    String
+  createdAt      DateTime  @default(now())
+  deletedAt      DateTime?
+
+  consultation Consultation  @relation(fields: [consultationId], references: [id])
+  prescription Prescription?
+}
