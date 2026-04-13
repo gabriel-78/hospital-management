@@ -1,7 +1,7 @@
 import { AppError, Either, isLeft, makeLeft, makeRight } from '@shared/core';
 import { IPharmaGateway } from './pharma.gateway.js';
 import { PharmaClient } from './pharma.client.js';
-import { PharmaProduct } from './pharma.types.js';
+import { PharmaListProductsFilters, PharmaProduct, PharmaProductRaw } from './pharma.types.js';
 
 export class PharmaHttpAdapter implements IPharmaGateway {
   constructor(private readonly client: PharmaClient) {}
@@ -12,9 +12,21 @@ export class PharmaHttpAdapter implements IPharmaGateway {
     if (isLeft(result)) return makeLeft(result.left);
     if (result.right === null) return makeRight(null);
 
-    const raw = result.right;
+    return makeRight(this.toDomain(result.right));
+  }
 
-    return makeRight({
+  async listProducts(
+    filters?: PharmaListProductsFilters,
+  ): Promise<Either<AppError, PharmaProduct[]>> {
+    const result = await this.client.listProducts(filters);
+
+    if (isLeft(result)) return makeLeft(result.left);
+
+    return makeRight(result.right.map((raw) => this.toDomain(raw)));
+  }
+
+  private toDomain(raw: PharmaProductRaw): PharmaProduct {
+    return {
       id: raw.id,
       name: raw.name,
       category: raw.category,
@@ -22,6 +34,6 @@ export class PharmaHttpAdapter implements IPharmaGateway {
       createdAt: new Date(raw.createdAt),
       updatedAt: new Date(raw.updatedAt),
       deletedAt: raw.deletedAt ? new Date(raw.deletedAt) : null,
-    });
+    };
   }
 }
