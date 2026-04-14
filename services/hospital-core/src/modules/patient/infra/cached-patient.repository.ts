@@ -66,18 +66,50 @@ export class CachedPatientRepository implements IPatientRepository {
   }
 
   async findById(id: string): Promise<Either<AppError, Patient | null>> {
-    return this.inner.findById(id);
+    const key = `patients:${id}`;
+    const cached = await this.cache.get<RawCached>(key);
+
+    if (cached !== null) {
+      const result = Patient.fromPersistence({
+        id: cached.id,
+        name: cached.name,
+        createdAt: new Date(cached.createdAt),
+        updatedAt: new Date(cached.updatedAt),
+        deletedAt: cached.deletedAt ? new Date(cached.deletedAt) : null,
+      });
+
+      if (isLeft(result)) {
+        await this.cache.del(key);
+        return this.inner.findById(id);
+      }
+
+      return makeRight(result.right);
+    }
+
+    const result = await this.inner.findById(id);
+
+    if (!isLeft(result) && result.right !== null) {
+      await this.cache.set(key, PatientMapper.toPersistence(result.right), TTL);
+    }
+
+    return result;
   }
 
   async save(patient: Patient): Promise<Either<AppError, Patient>> {
     const result = await this.inner.save(patient);
-    if (!isLeft(result)) await this.cache.del(CACHE_KEY);
+    if (!isLeft(result)) {
+      await this.cache.del(CACHE_KEY);
+      await this.cache.del(`patients:${patient.id.value}`);
+    }
     return result;
   }
 
   async softDelete(id: string): Promise<Either<AppError, void>> {
     const result = await this.inner.softDelete(id);
-    if (!isLeft(result)) await this.cache.del(CACHE_KEY);
+    if (!isLeft(result)) {
+      await this.cache.del(CACHE_KEY);
+      await this.cache.del(`patients:${id}`);
+    }
     return result;
   }
 }
