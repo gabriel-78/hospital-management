@@ -22,6 +22,7 @@ export function BaseCard({ ...props }: BaseCardProps) {
       onClick={(e) => {
         e.preventDefault();
         props.onSelected(props.patient, "select");
+        e.stopPropagation();
       }}
     >
       <CardHeader className="flex w-full justify-end flex-row">
@@ -41,6 +42,7 @@ export function BaseCard({ ...props }: BaseCardProps) {
             onClick={(e) => {
               e.preventDefault();
               props.onSelected(props.patient, "edit");
+              e.stopPropagation();
             }}
           >
             <SquarePen />

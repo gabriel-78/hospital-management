@@ -24,6 +24,7 @@ export const BaseCard = memo(function BaseCard({
     (type: "edit" | "select") => (e: React.MouseEvent) => {
       e.preventDefault();
       onSelected(doctor, type);
+      e.stopPropagation();
     },
     [onSelected, doctor],
   );
