@@ -76,6 +76,7 @@ export function ManageDoctorDialog({
     if (open) {
       form.reset({
         name: doctor?.name,
+        crm: doctor?.crm,
       });
     }
   }, [open]);
