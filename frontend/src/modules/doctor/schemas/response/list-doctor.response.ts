@@ -3,6 +3,7 @@ import z from "zod";
 export const DoctorResponseSchema = z.object({
   id: z.string(),
   name: z.string(),
+  crm: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   deletedAt: z.coerce.date().nullable(),
