@@ -8,15 +8,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { InputGroup, InputGroupInput, InputGroupTextarea } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupInput,
+  InputGroupTextarea,
+} from "@/components/ui/input-group";
 import { z } from "zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Plus, Trash } from "lucide-react";
 import { CreateConsultationResultPayloadSchema } from "../../schemas";
 import { useCreateConsultationResult } from "../../hooks";
 import { useSessionStore } from "@/stores";
+import { PharmaProductSearch } from "../PharmaProductSearch";
+import type { PharmaProductResponse } from "@/modules/pharma/schemas";
 
 interface CreateConsultationResultDialogProps {
   open: boolean;
@@ -84,6 +90,19 @@ export function CreateConsultationResultDialog({
       .then(() => onOpenChange(false));
   };
 
+  const handleProductSelect = useCallback(
+    (product: PharmaProductResponse) => {
+      append({
+        remedyId: product.id,
+        medication: product.name,
+        dosage: "",
+        duration: "",
+        instructions: "",
+      });
+    },
+    [append],
+  );
+
   useEffect(() => {
     if (open) {
       form.reset({ description: "", items: [] });
@@ -92,8 +111,8 @@ export function CreateConsultationResultDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[36rem] w-full gap-6 rounded-xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="max-w-[68rem] max-h-[600px] w-full gap-6 rounded-xl grow flex flex-col overflow-hidden">
+        <DialogHeader className="shrink-0">
           <DialogTitle className="text-gray-800 font-bold text-base text-left">
             Resultado da Consulta
           </DialogTitle>
@@ -103,175 +122,192 @@ export function CreateConsultationResultDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4 w-full"
-        >
-          <Controller
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <Field className="flex flex-col w-full gap-2">
-                <FieldLabel>Descrição</FieldLabel>
-                <InputGroup>
-                  <InputGroupTextarea
-                    placeholder="Descreva o resultado da consulta"
-                    rows={3}
-                    disabled={createConsultationResultMutation.isPending}
-                    {...field}
-                  />
-                </InputGroup>
-              </Field>
-            )}
-          />
-
-          {fields.length > 0 && (
-            <div className="flex flex-col gap-3">
-              <span className="text-sm font-medium text-gray-700">
-                Prescrição
-              </span>
-
-              {fields.map((field, index) => (
-                <div
-                  key={field.id}
-                  className="flex flex-col gap-3 p-3 border border-gray-200 rounded-lg"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                      Medicamento {index + 1}
-                    </span>
-
-                    <IconButton
-                      type="button"
-                      variant="destructive"
-                      onClick={() => remove(index)}
-                      disabled={createConsultationResultMutation.isPending}
-                    >
-                      <Trash />
-                    </IconButton>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <Controller
-                      control={form.control}
-                      name={`items.${index}.medication`}
-                      render={({ field: f }) => (
-                        <Field className="flex flex-col gap-1.5 col-span-2">
-                          <FieldLabel>Medicamento</FieldLabel>
-                          <InputGroup>
-                            <InputGroupInput
-                              placeholder="ex: Amoxicilina 500mg"
-                              disabled={createConsultationResultMutation.isPending}
-                              {...f}
-                            />
-                          </InputGroup>
-                        </Field>
-                      )}
-                    />
-
-                    <Controller
-                      control={form.control}
-                      name={`items.${index}.dosage`}
-                      render={({ field: f }) => (
-                        <Field className="flex flex-col gap-1.5">
-                          <FieldLabel>Dosagem</FieldLabel>
-                          <InputGroup>
-                            <InputGroupInput
-                              placeholder="ex: 1 comprimido"
-                              disabled={createConsultationResultMutation.isPending}
-                              {...f}
-                            />
-                          </InputGroup>
-                        </Field>
-                      )}
-                    />
-
-                    <Controller
-                      control={form.control}
-                      name={`items.${index}.duration`}
-                      render={({ field: f }) => (
-                        <Field className="flex flex-col gap-1.5">
-                          <FieldLabel>Duração</FieldLabel>
-                          <InputGroup>
-                            <InputGroupInput
-                              placeholder="ex: 7 dias"
-                              disabled={createConsultationResultMutation.isPending}
-                              {...f}
-                            />
-                          </InputGroup>
-                        </Field>
-                      )}
-                    />
-
-                    <Controller
-                      control={form.control}
-                      name={`items.${index}.instructions`}
-                      render={({ field: f }) => (
-                        <Field className="flex flex-col gap-1.5 col-span-2">
-                          <FieldLabel>Instruções (opcional)</FieldLabel>
-                          <InputGroup>
-                            <InputGroupInput
-                              placeholder="ex: Tomar após as refeições"
-                              disabled={createConsultationResultMutation.isPending}
-                              {...f}
-                            />
-                          </InputGroup>
-                        </Field>
-                      )}
-                    />
-
-                    <Controller
-                      control={form.control}
-                      name={`items.${index}.remedyId`}
-                      render={({ field: f }) => (
-                        <Field className="flex flex-col gap-1.5 col-span-2">
-                          <FieldLabel>ID Externo ERP (opcional)</FieldLabel>
-                          <InputGroup>
-                            <InputGroupInput
-                              placeholder="UUID do medicamento no ERP farmacológico"
-                              disabled={createConsultationResultMutation.isPending}
-                              {...f}
-                            />
-                          </InputGroup>
-                        </Field>
-                      )}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              append({
-                remedyId: "",
-                medication: "",
-                dosage: "",
-                duration: "",
-                instructions: "",
-              })
-            }
-            disabled={createConsultationResultMutation.isPending}
+        <div className="flex gap-6 min-h-0 overflow-hidden grow">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-4 overflow-hidden pr-1 grow"
           >
-            <Plus />
-            Adicionar medicamento
-          </Button>
+            <div className="flex flex-col grow overflow-y-auto gap-4">
+              <Controller
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <Field className="flex flex-col w-full gap-2">
+                    <FieldLabel>Descrição</FieldLabel>
+                    <InputGroup>
+                      <InputGroupTextarea
+                        placeholder="Descreva o resultado da consulta"
+                        rows={3}
+                        disabled={createConsultationResultMutation.isPending}
+                        {...field}
+                      />
+                    </InputGroup>
+                  </Field>
+                )}
+              />
+              {fields.length > 0 && (
+                <div className="flex flex-col gap-3">
+                  <span className="text-sm font-medium text-gray-700">
+                    Prescrição
+                  </span>
 
-          <div className="flex w-full pt-2">
+                  {fields.map((field, index) => (
+                    <div
+                      key={field.id}
+                      className="flex flex-col gap-3 p-3 border border-gray-200 rounded-lg"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                          Medicamento {index + 1}
+                        </span>
+
+                        <IconButton
+                          type="button"
+                          variant="destructive"
+                          onClick={() => remove(index)}
+                          disabled={createConsultationResultMutation.isPending}
+                        >
+                          <Trash />
+                        </IconButton>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <Controller
+                          control={form.control}
+                          name={`items.${index}.medication`}
+                          render={({ field: f }) => (
+                            <Field className="flex flex-col gap-1.5 col-span-2">
+                              <FieldLabel>Medicamento</FieldLabel>
+                              <InputGroup>
+                                <InputGroupInput
+                                  placeholder="ex: Amoxicilina 500mg"
+                                  disabled={
+                                    createConsultationResultMutation.isPending
+                                  }
+                                  {...f}
+                                />
+                              </InputGroup>
+                            </Field>
+                          )}
+                        />
+
+                        <Controller
+                          control={form.control}
+                          name={`items.${index}.dosage`}
+                          render={({ field: f }) => (
+                            <Field className="flex flex-col gap-1.5">
+                              <FieldLabel>Dosagem</FieldLabel>
+                              <InputGroup>
+                                <InputGroupInput
+                                  placeholder="ex: 1 comprimido"
+                                  disabled={
+                                    createConsultationResultMutation.isPending
+                                  }
+                                  {...f}
+                                />
+                              </InputGroup>
+                            </Field>
+                          )}
+                        />
+
+                        <Controller
+                          control={form.control}
+                          name={`items.${index}.duration`}
+                          render={({ field: f }) => (
+                            <Field className="flex flex-col gap-1.5">
+                              <FieldLabel>Duração</FieldLabel>
+                              <InputGroup>
+                                <InputGroupInput
+                                  placeholder="ex: 7 dias"
+                                  disabled={
+                                    createConsultationResultMutation.isPending
+                                  }
+                                  {...f}
+                                />
+                              </InputGroup>
+                            </Field>
+                          )}
+                        />
+
+                        <Controller
+                          control={form.control}
+                          name={`items.${index}.instructions`}
+                          render={({ field: f }) => (
+                            <Field className="flex flex-col gap-1.5 col-span-2">
+                              <FieldLabel>Instruções (opcional)</FieldLabel>
+                              <InputGroup>
+                                <InputGroupInput
+                                  placeholder="ex: Tomar após as refeições"
+                                  disabled={
+                                    createConsultationResultMutation.isPending
+                                  }
+                                  {...f}
+                                />
+                              </InputGroup>
+                            </Field>
+                          )}
+                        />
+
+                        <Controller
+                          control={form.control}
+                          name={`items.${index}.remedyId`}
+                          render={({ field: f }) => (
+                            <Field className="flex flex-col gap-1.5 col-span-2">
+                              <FieldLabel>ID Externo ERP (opcional)</FieldLabel>
+                              <InputGroup>
+                                <InputGroupInput
+                                  placeholder="UUID do medicamento no ERP farmacológico"
+                                  disabled={
+                                    createConsultationResultMutation.isPending
+                                  }
+                                  {...f}
+                                />
+                              </InputGroup>
+                            </Field>
+                          )}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <Button
-              type="submit"
-              className="w-full"
-              size="md"
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                append({
+                  remedyId: "",
+                  medication: "",
+                  dosage: "",
+                  duration: "",
+                  instructions: "",
+                })
+              }
               disabled={createConsultationResultMutation.isPending}
             >
-              Salvar resultado
+              <Plus />
+              Adicionar medicamento
             </Button>
+
+            <div className="flex w-full pt-2">
+              <Button
+                type="submit"
+                className="w-full"
+                size="md"
+                disabled={createConsultationResultMutation.isPending}
+              >
+                Salvar resultado
+              </Button>
+            </div>
+          </form>
+
+          <div className="w-80 shrink-0 flex flex-col border-l border-gray-100 pl-6 min-h-0">
+            <PharmaProductSearch onSelect={handleProductSelect} />
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

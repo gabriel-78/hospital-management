@@ -30,4 +30,7 @@ export const queryKeys = {
       create: (_id?: string) => [queryKeys.consultations.list()],
     },
   },
+  pharmaProducts: {
+    list: () => ["list-pharma-products"],
+  },
 };
