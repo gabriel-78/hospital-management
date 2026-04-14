@@ -15,4 +15,10 @@ export class RedisCacheProvider implements CacheProvider {
   async del(key: string): Promise<void> {
     await redisClient.del(key);
   }
+
+  async delByPattern(pattern: string): Promise<void> {
+    for await (const key of redisClient.scanIterator({ MATCH: pattern, COUNT: 100 })) {
+      await redisClient.del(key);
+    }
+  }
 }
