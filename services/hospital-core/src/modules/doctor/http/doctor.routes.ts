@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { validate } from '@/infra/middlewares/validate.middleware.js';
+import { RedisCacheProvider } from '@/infra/cache/index.js';
 import { PrismaDoctorRepository } from '../infra/prisma-doctor.repository.js';
+import { CachedDoctorRepository } from '../infra/cached-doctor.repository.js';
 import {
   CreateDoctorUseCase,
   DeleteDoctorUseCase,
@@ -18,7 +20,7 @@ import {
 
 const doctorRouter = Router();
 
-const repository = new PrismaDoctorRepository();
+const repository = new CachedDoctorRepository(new PrismaDoctorRepository(), new RedisCacheProvider());
 const controller = new DoctorController(
   new CreateDoctorUseCase(repository),
   new FindDoctorByIdUseCase(repository),
