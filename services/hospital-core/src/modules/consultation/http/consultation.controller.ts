@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { isLeft, success } from '@shared/core';
-import { failureRequest } from '@/shared/http.js';
+import { failureRequest, getRouteParam } from '@/shared/http.js';
 import {
   CancelConsultationUseCase,
   CompleteConsultationUseCase,
@@ -31,7 +31,7 @@ export class ConsultationController {
   }
 
   async findById(req: Request, res: Response) {
-    const result = await this.findByIdUseCase.execute(req.params.id);
+    const result = await this.findByIdUseCase.execute(getRouteParam(req, 'id'));
     if (isLeft(result)) return failureRequest(res, result.left);
     return res.status(200).send(success(ConsultationPresenter.toFindByIdOutput(result.right)));
   }
@@ -44,25 +44,25 @@ export class ConsultationController {
   }
 
   async cancel(req: Request, res: Response) {
-    const result = await this.cancelUseCase.execute(req.params.id);
+    const result = await this.cancelUseCase.execute(getRouteParam(req, 'id'));
     if (isLeft(result)) return failureRequest(res, result.left);
     return res.status(200).send(success(ConsultationPresenter.toCancelOutput(result.right)));
   }
 
   async complete(req: Request, res: Response) {
-    const result = await this.completeUseCase.execute(req.params.id);
+    const result = await this.completeUseCase.execute(getRouteParam(req, 'id'));
     if (isLeft(result)) return failureRequest(res, result.left);
     return res.status(200).send(success(ConsultationPresenter.toCompleteOutput(result.right)));
   }
 
   async reschedule(req: Request, res: Response) {
-    const result = await this.rescheduleUseCase.execute(req.params.id, req.body);
+    const result = await this.rescheduleUseCase.execute(getRouteParam(req, 'id'), req.body);
     if (isLeft(result)) return failureRequest(res, result.left);
     return res.status(200).send(success(ConsultationPresenter.toRescheduleOutput(result.right)));
   }
 
   async delete(req: Request, res: Response) {
-    const result = await this.deleteUseCase.execute(req.params.id);
+    const result = await this.deleteUseCase.execute(getRouteParam(req, 'id'));
     if (isLeft(result)) return failureRequest(res, result.left);
     return res.status(204).send();
   }
