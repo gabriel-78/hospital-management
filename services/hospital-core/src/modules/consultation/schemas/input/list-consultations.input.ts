@@ -1,6 +1,7 @@
 import { z } from 'zod';
+import { ConsultationStatusEnum } from '../../consultation.domain.js';
 
-const statusEnum = z.enum(['SCHEDULED', 'CANCELLED', 'COMPLETED']);
+const statusEnum = z.nativeEnum(ConsultationStatusEnum);
 
 export const listConsultationsInputSchema = z.object({
   patientId: z.string().uuid().optional(),

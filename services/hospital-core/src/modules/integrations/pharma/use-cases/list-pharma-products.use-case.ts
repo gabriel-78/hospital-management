@@ -1,6 +1,6 @@
 import { AppError, Either } from '@shared/core';
-import { IPharmaGateway } from '../pharma.gateway.js';
-import { PharmaListProductsFilters, PharmaProduct } from '../pharma.types.js';
+import { IPharmaGateway } from '../http/pharma.gateway.js';
+import { PharmaListProductsFilters, PharmaProduct } from '../http/pharma.types.js';
 
 export class ListPharmaProductsUseCase {
   constructor(private gateway: IPharmaGateway) {}

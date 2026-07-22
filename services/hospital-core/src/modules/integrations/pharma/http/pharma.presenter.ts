@@ -1,4 +1,4 @@
-import { PharmaProduct } from '../pharma.types.js';
+import { PharmaProduct } from './pharma.types.js';
 import {
   ListPharmaProductsOutput,
   listPharmaProductsOutputSchema,

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { isLeft, success } from '@shared/core';
-import { failureRequest } from '@/shared/http.js';
+import { failureRequest, getRouteParam } from '@/shared/http.js';
 import {
   CreatePatientUseCase,
   DeletePatientUseCase,
@@ -26,7 +26,7 @@ export class PatientController {
   }
 
   async findById(req: Request, res: Response) {
-    const result = await this.findByIdUseCase.execute(req.params.id);
+    const result = await this.findByIdUseCase.execute(getRouteParam(req, 'id'));
     if (isLeft(result)) return failureRequest(res, result.left);
     return res.status(200).send(success(PatientPresenter.toFindByIdOutput(result.right)));
   }
@@ -38,13 +38,13 @@ export class PatientController {
   }
 
   async update(req: Request, res: Response) {
-    const result = await this.updateUseCase.execute(req.params.id, req.body);
+    const result = await this.updateUseCase.execute(getRouteParam(req, 'id'), req.body);
     if (isLeft(result)) return failureRequest(res, result.left);
     return res.status(200).send(success(PatientPresenter.toUpdateOutput(result.right)));
   }
 
   async delete(req: Request, res: Response) {
-    const result = await this.deleteUseCase.execute(req.params.id);
+    const result = await this.deleteUseCase.execute(getRouteParam(req, 'id'));
     if (isLeft(result)) return failureRequest(res, result.left);
     return res.status(204).send();
   }

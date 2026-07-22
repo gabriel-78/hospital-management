@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { isLeft, success } from '@shared/core';
-import { failureRequest } from '@/shared/http.js';
+import { failureRequest, getRouteParam } from '@/shared/http.js';
 import {
   CreateConsultationResultUseCase,
   FindConsultationResultByConsultationIdUseCase,
@@ -21,7 +21,7 @@ export class ConsultationResultController {
   }
 
   async findByConsultationId(req: Request, res: Response) {
-    const result = await this.findByConsultationIdUseCase.execute(req.params.consultationId);
+    const result = await this.findByConsultationIdUseCase.execute(getRouteParam(req, 'consultationId'));
     if (isLeft(result)) return failureRequest(res, result.left);
     return res
       .status(200)
