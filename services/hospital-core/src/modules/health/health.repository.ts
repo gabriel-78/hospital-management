@@ -1,5 +1,5 @@
 import { prisma } from '@/infra/database/prisma.js';
-import { HealthCheck } from '@prisma/client';
+import { HealthCheck } from '#prisma';
 import { AppError, Either, makeLeft, makeRight } from '@shared/core';
 
 export class HealthRepository {

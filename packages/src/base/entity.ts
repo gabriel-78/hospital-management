@@ -1,5 +1,3 @@
-import { Either } from "./either.js";
-import { AppError } from "./appError.js";
 import { Id } from "../vo/id.vo.js";
 
 export interface EntityProps {
@@ -43,27 +41,6 @@ export abstract class Entity<Type, Props extends EntityProps> {
 
   notEquals(entity: Entity<Type, Props>): boolean {
     return this.id.notEquals(entity.id);
-  }
-
-  public cloneWith(overrides: Partial<Props>): Either<AppError, Type> {
-    const merged = this.deepMerge(structuredClone(this.props), overrides);
-    return (this.constructor as any).tryCreate(merged);
-  }
-
-  private deepMerge(target: any, source: any): any {
-    for (const key of Object.keys(source)) {
-      if (
-        source[key] &&
-        typeof source[key] === "object" &&
-        !Array.isArray(source[key])
-      ) {
-        if (!target[key]) target[key] = {};
-        this.deepMerge(target[key], source[key]);
-      } else {
-        target[key] = source[key];
-      }
-    }
-    return target;
   }
 
   toJSON() {

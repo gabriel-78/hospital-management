@@ -1,4 +1,4 @@
-import { CompanyType, Prisma, PrismaClient } from '@prisma/client';
+import { CompanyType, Prisma, PrismaClient } from '#prisma';
 
 const companies: Prisma.CompanyCreateInput[] = [
   {

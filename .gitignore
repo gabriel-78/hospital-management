@@ -27,6 +27,13 @@ pnpm-debug.log*
 .nuxt/
 .svelte-kit/
 
+# Monorepo build/cache
+.turbo/
+dist/
+
+# Prisma generated clients (run `prisma generate` to recreate)
+services/*/src/generated/
+
 # Coverage
 coverage/
 *.lcov
@@ -63,7 +70,6 @@ out/
 # Package managers
 package-lock.json
 yarn.lock
-pnpm-lock.yaml
 
 # Misc
 *.tgz

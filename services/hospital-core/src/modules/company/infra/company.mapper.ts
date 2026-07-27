@@ -1,4 +1,4 @@
-import { Company as PrismaCompany, CompanyType as PrismaCompanyType } from '@prisma/client';
+import { Company as PrismaCompany, CompanyType as PrismaCompanyType } from '#prisma';
 import { Either, AppError } from '@shared/core';
 import { Company } from '../company.domain.js';
 

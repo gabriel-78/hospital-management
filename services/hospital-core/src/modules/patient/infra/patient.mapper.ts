@@ -1,4 +1,4 @@
-import { Patient as PrismaPatient } from '@prisma/client';
+import { Patient as PrismaPatient } from '#prisma';
 import { AppError, Either } from '@shared/core';
 import { Patient } from '../patient.domain.js';
 
