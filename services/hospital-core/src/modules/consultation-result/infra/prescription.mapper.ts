@@ -1,4 +1,4 @@
-import { Prescription as PrismaPrescription } from '@prisma/client';
+import { Prescription as PrismaPrescription } from '#prisma';
 import { AppError, Either } from '@shared/core';
 import { Prescription } from '../prescription.domain.js';
 

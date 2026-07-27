@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '#prisma';
 
 const doctors = [
   { name: 'Ana Paula Ferreira', crm: '123456-SP' },

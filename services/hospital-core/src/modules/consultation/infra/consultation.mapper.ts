@@ -1,4 +1,4 @@
-import { Consultation as PrismaConsultation, ConsultationStatus } from '@prisma/client';
+import { Consultation as PrismaConsultation, ConsultationStatus } from '#prisma';
 import { AppError, Either } from '@shared/core';
 import { Consultation } from '../consultation.domain.js';
 

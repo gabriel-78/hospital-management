@@ -1,4 +1,4 @@
-import { ConsultationStatus } from '@prisma/client';
+import { ConsultationStatus } from '#prisma';
 import { AppError, Either, isLeft, makeLeft, makeRight } from '@shared/core';
 import { prisma } from '@/infra/database/prisma.js';
 import { Consultation } from '../consultation.domain.js';

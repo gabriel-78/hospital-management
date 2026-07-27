@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '#prisma';
 
 const products: Prisma.ProductCreateInput[] = [
   { name: 'ACEBROFILINA', category: 'BRONCODILATADORES', activeIngredient: 'ACEBROFILINA' },

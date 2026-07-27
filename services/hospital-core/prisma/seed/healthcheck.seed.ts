@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '#prisma';
 
 /**
  * @param prisma - Aceita tanto o cliente original quanto o contexto de transação

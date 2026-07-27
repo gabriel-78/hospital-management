@@ -1,4 +1,4 @@
-import { Product as PrismaProduct } from '@prisma/client';
+import { Product as PrismaProduct } from '#prisma';
 import { AppError, Either } from '@shared/core';
 import { Product } from '../domain/product.domain.js';
 

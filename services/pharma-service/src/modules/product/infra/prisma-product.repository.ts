@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '#prisma';
 import { AppError, Either, isLeft, makeLeft, makeRight } from '@shared/core';
 import { prisma } from '@/infra/database/prisma.js';
 import { Product } from '../domain/index.js';
