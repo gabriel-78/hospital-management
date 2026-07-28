@@ -9,5 +9,5 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   noExternal: ['@shared/core'],
-  external: ['#prisma', '@prisma/client'],
+  external: ['#prisma', '@prisma/client', '@prisma/adapter-pg', 'pg'],
 });

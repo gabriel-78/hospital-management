@@ -12,5 +12,5 @@ export default defineConfig({
   noExternal: ['@shared/core'],
   // o client Prisma gerado (WASM) fica EXTERNO via subpath import #prisma,
   // resolvido em runtime pelo Node — não empacotado pelo esbuild:
-  external: ['#prisma', '@prisma/client'],
+  external: ['#prisma', '@prisma/client', '@prisma/adapter-pg', 'pg'],
 });

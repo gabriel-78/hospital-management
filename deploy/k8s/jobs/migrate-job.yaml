@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hospital-migrate
+  namespace: hospital-management
+spec:
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-db
+          image: postgres:16-alpine
+          command: ["sh", "-c", "until pg_isready -h hospital-postgres -p 5432 -U admin; do sleep 2; done"]
+      containers:
+        - name: migrate
+          image: hospital-migrate:local
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DATABASE_URL
+              valueFrom: { secretKeyRef: { name: app-secrets, key: HOSPITAL_DATABASE_URL } }
+          command: ["sh", "-c", "pnpm --filter backend exec prisma migrate deploy && pnpm --filter backend exec prisma db seed"]
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pharma-migrate
+  namespace: hospital-management
+spec:
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-db
+          image: postgres:16-alpine
+          command: ["sh", "-c", "until pg_isready -h pharma-postgres -p 5432 -U admin; do sleep 2; done"]
+      containers:
+        - name: migrate
+          image: pharma-migrate:local
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DATABASE_URL
+              valueFrom: { secretKeyRef: { name: app-secrets, key: PHARMA_DATABASE_URL } }
+          command: ["sh", "-c", "pnpm --filter pharma-service exec prisma migrate deploy && pnpm --filter pharma-service exec prisma db seed"]
