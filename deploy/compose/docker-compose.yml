@@ -1,0 +1,114 @@
+name: hospital-management
+
+services:
+  hospital-postgres:
+    image: bitnami/postgresql:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: hospital-management
+    ports:
+      - "5432:5432"
+    volumes:
+      - hospital_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "admin", "-d", "hospital-management"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  pharma-postgres:
+    image: bitnami/postgresql:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: pharma
+    ports:
+      - "5433:5432"
+    volumes:
+      - pharma_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "admin", "-d", "pharma"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  hospital-core:
+    build:
+      context: ../..
+      dockerfile: docker/hospital-core.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://admin:admin@hospital-postgres:5432/hospital-management
+      REDIS_URL: redis://redis:6379
+      PHARMA_SERVICE_URL: http://pharma-service:5001
+      FRONT_END_URL: http://localhost:5173
+      PORT: "3333"
+    ports:
+      - "3333:3333"
+    depends_on:
+      hospital-postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  pharma-service:
+    build:
+      context: ../..
+      dockerfile: docker/pharma-service.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://admin:admin@pharma-postgres:5432/pharma
+      FRONT_END_URL: http://localhost:5173
+      PORT: "5001"
+    ports:
+      - "5001:5001"
+    depends_on:
+      pharma-postgres:
+        condition: service_healthy
+
+  hospital-migrate:
+    build:
+      context: ../..
+      dockerfile: docker/hospital-core.Dockerfile
+      target: build
+    profiles: ["init"]
+    environment:
+      DATABASE_URL: postgresql://admin:admin@hospital-postgres:5432/hospital-management
+    depends_on:
+      hospital-postgres:
+        condition: service_healthy
+    command: >
+      sh -c "pnpm --filter backend exec prisma migrate deploy &&
+             pnpm --filter backend exec prisma db seed"
+
+  pharma-migrate:
+    build:
+      context: ../..
+      dockerfile: docker/pharma-service.Dockerfile
+      target: build
+    profiles: ["init"]
+    environment:
+      DATABASE_URL: postgresql://admin:admin@pharma-postgres:5432/pharma
+    depends_on:
+      pharma-postgres:
+        condition: service_healthy
+    command: >
+      sh -c "pnpm --filter pharma-service exec prisma migrate deploy &&
+             pnpm --filter pharma-service exec prisma db seed"
+
+volumes:
+  hospital_pg_data:
+  pharma_pg_data:
+  redis_data:
